@@ -2,8 +2,8 @@ import { MathOperationService } from './math-operation.service.js';
 import { MathExpressionDto } from '../dto/expressions/math-expression.dto';
 import { OperationEnum } from '../enums/operation.enum';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
-import { LogicService } from './logic.service.ts';
-import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto.ts';
+import { LogicService } from './logic.service';
+import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
 
 export const MathExpressionService = new (class MathExpressionService {
   _operators: Map<OperationEnum, string> = new Map([

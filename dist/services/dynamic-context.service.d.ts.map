@@ -1,0 +1,1 @@
+{"version":3,"file":"dynamic-context.service.d.ts","sourceRoot":"src/","sources":["services/dynamic-context.service.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,MAAM,yCAAyC,CAAC;AAEzE,eAAO,MAAM,qBAAqB;yBAEvB;QAAE,CAAC,GAAG,EAAE,MAAM,GAAG,GAAG,CAAA;KAAE,cACjB;QAAE,CAAC,GAAG,EAAE,MAAM,GAAG,GAAG,CAAA;KAAE,GACjC,cAAc;wBAaG,cAAc,GAAG,cAAc;CAGjD,CAAC"}

@@ -11,31 +11,31 @@ export const MathOperationService = new (class MathOperationService {
     switch (operation) {
       case OperationEnum.ADD: {
         if (debug) {
-          console.log(debugLabel, `${a} + ${b} = ${a + b}`);
+          console.log(debugLabel, a, '+', b, '=', a + b);
         }
         return a + b;
       }
       case OperationEnum.DIVIDE: {
         if (debug) {
-          console.log(debugLabel, `${a} / ${b} = ${a / b}`);
+          console.log(debugLabel, a, '/', b, '=', a / b);
         }
         return a / b;
       }
       case OperationEnum.MULTIPLY: {
         if (debug) {
-          console.log(debugLabel, `${a} * ${b} = ${a * b}`);
+          console.log(debugLabel, a, '*', b, '=', a * b);
         }
         return a * b;
       }
       case OperationEnum.POW: {
         if (debug) {
-          console.log(debugLabel, `${a}^${b} = ${Math.pow(a, b)}`);
+          console.log(debugLabel, a, '^', b, '=', Math.pow(a, b));
         }
         return a ** b;
       }
       case OperationEnum.SUBTRACT: {
         if (debug) {
-          console.log(debugLabel, `${a} - ${b} = ${a - b}`);
+          console.log(debugLabel, a, '-', b, '=', a - b);
         }
         return a - b;
       }

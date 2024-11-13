@@ -1,7 +1,7 @@
-import { DynamicContext } from '../../src/interfaces/dynamic-context.interface.ts';
-import { DynamicContextService } from '../../src/services/dynamic-context.service.ts';
+import { DynamicContext } from '../../src';
+import { DynamicContextService } from '../../src';
 import { readFileSync } from 'fs';
-import { LogicService } from '../../src/services/logic.service.ts';
+import { LogicService } from '../../src';
 
 const input = JSON.parse(
   readFileSync('./test/files/math.json').toString('utf-8'),
@@ -13,4 +13,4 @@ const context: DynamicContext = DynamicContextService.createContext(
 const logic = input['logic'];
 
 const result = LogicService.resolve(logic, context);
-console.log('Result: ' + result);
+console.log('Result', result);
