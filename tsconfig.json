@@ -1,0 +1,18 @@
+{
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "compilerOptions": {
+    // Or "CommonJS" if not using ESM
+    "moduleResolution": "node",
+    // Ensures compatibility with Node resolution
+    "target": "ESNext",
+    // Target at least ESNext for ESM support
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noUncheckedIndexedAccess": false,
+    "lib": [
+      "dom",
+      "es2019"
+    ]
+  }
+}

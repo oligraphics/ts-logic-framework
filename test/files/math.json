@@ -1,0 +1,44 @@
+{
+  "props": {
+    "fruitBasket": {
+      "apples": 3,
+      "oranges": 4
+    }
+  },
+  "logic": [
+    {
+      "debug": true,
+      "operation": "add",
+      "a": "{fruitBasket.apples}",
+      "b": 1,
+      "result": "apples"
+    },
+    {
+      "debug": true,
+      "operation": "subtract",
+      "a": "{fruitBasket.oranges}",
+      "b": {
+        "debug": true,
+        "operation": "multiply",
+        "a": "{fruitBasket.apples}",
+        "b": {
+          "if": {
+            "debug": true,
+            "type": "greater_than",
+            "value": "#apples",
+            "greaterThan": 2
+          },
+          "true": 1,
+          "false": 0
+        }
+      },
+      "result": "oranges"
+    },
+    {
+      "debug": true,
+      "operation": "add",
+      "a": "#apples",
+      "b": "#oranges"
+    }
+  ]
+}
