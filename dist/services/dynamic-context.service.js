@@ -1,4 +1,7 @@
-export const DynamicContextService = new (class DynamicContextService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DynamicContextService = void 0;
+exports.DynamicContextService = new (class DynamicContextService {
     createContext(props, variables) {
         const result = {};
         for (const [key, value] of Object.entries(props)) {

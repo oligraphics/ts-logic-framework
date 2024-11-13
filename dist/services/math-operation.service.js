@@ -1,32 +1,35 @@
-import { OperationEnum } from '../enums/operation.enum.js';
-export const MathOperationService = new (class MathOperationService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MathOperationService = void 0;
+const operation_enum_js_1 = require("../enums/operation.enum.js");
+exports.MathOperationService = new (class MathOperationService {
     run(operation, a, b, debug = false, debugLabel = undefined) {
         switch (operation) {
-            case OperationEnum.ADD: {
+            case operation_enum_js_1.OperationEnum.ADD: {
                 if (debug) {
                     console.log(debugLabel, a, '+', b, '=', a + b);
                 }
                 return a + b;
             }
-            case OperationEnum.DIVIDE: {
+            case operation_enum_js_1.OperationEnum.DIVIDE: {
                 if (debug) {
                     console.log(debugLabel, a, '/', b, '=', a / b);
                 }
                 return a / b;
             }
-            case OperationEnum.MULTIPLY: {
+            case operation_enum_js_1.OperationEnum.MULTIPLY: {
                 if (debug) {
                     console.log(debugLabel, a, '*', b, '=', a * b);
                 }
                 return a * b;
             }
-            case OperationEnum.POW: {
+            case operation_enum_js_1.OperationEnum.POW: {
                 if (debug) {
                     console.log(debugLabel, a, '^', b, '=', Math.pow(a, b));
                 }
                 return a ** b;
             }
-            case OperationEnum.SUBTRACT: {
+            case operation_enum_js_1.OperationEnum.SUBTRACT: {
                 if (debug) {
                     console.log(debugLabel, a, '-', b, '=', a - b);
                 }
