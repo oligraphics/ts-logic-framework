@@ -6,6 +6,9 @@
   "type": "module",
   "main": "dist/index.ts",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "test": "tsx test/src/test.ts",
     "lint": "eslint src/**/* --fix --ignore-pattern '!**/.gitignore'"
