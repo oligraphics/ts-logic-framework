@@ -1,18 +1,18 @@
-import { Condition } from '../interfaces/condition.interface.ts';
-import { DynamicContext } from '../interfaces/dynamic-context.interface.ts';
-import { ConditionLogicHandlerInterface } from '../interfaces/condition-logic-handler.interface.ts';
-import { ConditionDto } from '../dto/conditions/condition.dto.ts';
-import { BooleanLogicTypeEnum } from '../enums/boolean-logic-type.enum.ts';
-import { EqualConditionDto } from '../dto/conditions/comparisons/equal.condition.dto.ts';
-import { LogicGateDto } from '../dto/conditions/logic/logic-gate.dto.ts';
-import { LogicService } from './logic.service.ts';
-import { GreaterThanConditionDto } from '../dto/conditions/comparisons/greater-than.condition.dto.ts';
-import { LessThanConditionDto } from '../dto/conditions/comparisons/less-than.condition.dto.ts';
-import { LessThanOrEqualConditionDto } from '../dto/conditions/comparisons/less-than-or-equal.condition.dto.ts';
-import { GreaterThanOrEqualConditionDto } from '../dto/conditions/comparisons/greater-than-or-equal.condition.dto.ts';
+import { Condition } from '../interfaces/condition.interface';
+import { DynamicContext } from '../interfaces/dynamic-context.interface';
+import { ConditionLogicHandlerInterface } from '../interfaces/condition-logic-handler.interface';
+import { ConditionDto } from '../dto/conditions/condition.dto';
+import { BooleanLogicTypeEnum } from '../enums/boolean-logic-type.enum';
+import { EqualConditionDto } from '../dto/conditions/comparisons/equal.condition.dto';
+import { LogicGateDto } from '../dto/conditions/logic/logic-gate.dto';
+import { LogicService } from './logic.service';
+import { GreaterThanConditionDto } from '../dto/conditions/comparisons/greater-than.condition.dto';
+import { LessThanConditionDto } from '../dto/conditions/comparisons/less-than.condition.dto';
+import { LessThanOrEqualConditionDto } from '../dto/conditions/comparisons/less-than-or-equal.condition.dto';
+import { GreaterThanOrEqualConditionDto } from '../dto/conditions/comparisons/greater-than-or-equal.condition.dto';
 
 export const ConditionService = new (class ConditionService {
-  private comparisons = [
+  comparisons = [
     BooleanLogicTypeEnum.EQUAL,
     BooleanLogicTypeEnum.GREATER_THAN,
     BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL,
@@ -131,6 +131,7 @@ export const ConditionService = new (class ConditionService {
             input,
             Array.isArray(value) ? 'in' : '=',
             value,
+            '=',
             result,
           );
         }
@@ -145,7 +146,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input > value;
         if (logic.debug) {
-          console.log(debugLabel, input, '>', value, result);
+          console.log(debugLabel, input, '>', value, '=', result);
         }
         return result !== logic.invert ? true : logic;
       }
@@ -158,7 +159,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input >= value;
         if (logic.debug) {
-          console.log(debugLabel, input, '>=', value, result);
+          console.log(debugLabel, input, '>=', value, '=', result);
         }
         return result !== logic.invert ? true : logic;
       }
@@ -171,7 +172,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input <= value;
         if (logic.debug) {
-          console.log(debugLabel, input, '<=', value, result);
+          console.log(debugLabel, input, '<=', value, '=', result);
         }
         return result !== logic.invert ? true : logic;
       }
@@ -184,7 +185,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input < value;
         if (logic.debug) {
-          console.log(debugLabel, input, '<', value, result);
+          console.log(debugLabel, input, '<', value, '=', result);
         }
         return result !== logic.invert ? true : logic;
       }

@@ -1,3 +1,3 @@
-import { LogicGateDto } from './logic-gate.dto.ts';
+import { LogicGateDto } from './logic-gate.dto';
 
 export type XorConditionDto = {} & LogicGateDto;

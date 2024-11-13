@@ -1,13 +1,13 @@
 import Rand from 'rand-seed';
 import { DynamicContextService } from './dynamic-context.service';
-import { DynamicContext } from '../interfaces/dynamic-context.interface.ts';
-import { DynamicValue } from '../interfaces/dynamic-value.interface.ts';
-import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern.ts';
-import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto.ts';
-import { MathExpressionDto } from '../dto/expressions/math-expression.dto.ts';
-import { MathExpressionService } from './math-expression.service.ts';
-import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto.ts';
-import { ConditionalValuesService } from './conditional-values.service.ts';
+import { DynamicContext } from '../interfaces/dynamic-context.interface';
+import { DynamicValue } from '../interfaces/dynamic-value.interface';
+import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
+import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
+import { MathExpressionDto } from '../dto/expressions/math-expression.dto';
+import { MathExpressionService } from './math-expression.service';
+import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto';
+import { ConditionalValuesService } from './conditional-values.service';
 
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext): T {

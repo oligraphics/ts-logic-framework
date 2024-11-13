@@ -1,5 +1,5 @@
-import { Condition } from '../../interfaces/condition.interface.ts';
-import { DynamicValue } from '../../interfaces/dynamic-value.interface.ts';
+import { Condition } from '../../interfaces/condition.interface';
+import { DynamicValue } from '../../interfaces/dynamic-value.interface';
 
 export type ConditionalValueDto = {
   debug?: boolean;

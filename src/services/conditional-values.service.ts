@@ -1,7 +1,7 @@
-import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto.ts';
-import { DynamicContext } from '../interfaces/dynamic-context.interface.ts';
-import { ConditionService } from './condition.service.ts';
-import { LogicService } from './logic.service.ts';
+import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto';
+import { DynamicContext } from '../interfaces/dynamic-context.interface';
+import { ConditionService } from './condition.service';
+import { LogicService } from './logic.service';
 
 export const ConditionalValuesService = new (class ConditionalValuesService {
   resolve(value: ConditionalValueDto, context: DynamicContext): any {

@@ -1,0 +1,1 @@
+{"version":3,"file":"math-operation.service.d.ts","sourceRoot":"src/","sources":["services/math-operation.service.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,4BAA4B,CAAC;AAE3D,eAAO,MAAM,oBAAoB;mBAElB,aAAa,KACrB,MAAM,KACN,MAAM,gCAEG,MAAM,GAAG,SAAS,GAC7B,MAAM;CAuCP,CAAC"}

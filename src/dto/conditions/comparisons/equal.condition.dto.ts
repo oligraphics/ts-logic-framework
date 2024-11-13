@@ -1,5 +1,5 @@
-import { ConditionDto } from '../condition.dto.ts';
-import { DynamicValue } from '../../../interfaces/dynamic-value.interface.ts';
+import { ConditionDto } from '../condition.dto';
+import { DynamicValue } from '../../../interfaces/dynamic-value.interface';
 
 export type EqualConditionDto = {
   value: DynamicValue;
