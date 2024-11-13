@@ -1,4 +1,7 @@
-export const StringUtilityService = new (class StringUtilityService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StringUtilityService = void 0;
+exports.StringUtilityService = new (class StringUtilityService {
     toLowerCaseUnderscore(value) {
         return value
             .split(' ')

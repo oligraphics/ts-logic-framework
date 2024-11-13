@@ -1,1 +1,1 @@
-{"version":3,"file":"dynamic-reference.pattern.js","sourceRoot":"src/","sources":["patterns/dynamic-reference.pattern.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,MAAM,uBAAuB,GAAG;IACrC;;;OAGG;IACH,QAAQ,EAAE,sBAAsB;IAChC;;;OAGG;IACH,QAAQ,EAAE,mCAAmC;CAC9C,CAAC"}
+{"version":3,"file":"dynamic-reference.pattern.js","sourceRoot":"src/","sources":["patterns/dynamic-reference.pattern.ts"],"names":[],"mappings":";;;AAAa,QAAA,uBAAuB,GAAG;IACrC;;;OAGG;IACH,QAAQ,EAAE,sBAAsB;IAChC;;;OAGG;IACH,QAAQ,EAAE,mCAAmC;CAC9C,CAAC"}

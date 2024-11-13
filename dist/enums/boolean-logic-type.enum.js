@@ -1,4 +1,7 @@
-export var BooleanLogicTypeEnum;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.BooleanLogicTypeEnum = void 0;
+var BooleanLogicTypeEnum;
 (function (BooleanLogicTypeEnum) {
     /**
      * No logic present
@@ -48,5 +51,5 @@ export var BooleanLogicTypeEnum;
      */
     BooleanLogicTypeEnum["XOR"] = "xor";
     // </editor-fold>
-})(BooleanLogicTypeEnum || (BooleanLogicTypeEnum = {}));
+})(BooleanLogicTypeEnum || (exports.BooleanLogicTypeEnum = BooleanLogicTypeEnum = {}));
 //# sourceMappingURL=boolean-logic-type.enum.js.map

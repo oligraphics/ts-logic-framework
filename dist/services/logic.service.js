@@ -1,8 +1,11 @@
-import { DynamicContextService } from './dynamic-context.service';
-import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
-import { MathExpressionService } from './math-expression.service';
-import { ConditionalValuesService } from './conditional-values.service';
-export const LogicService = new (class LogicService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LogicService = void 0;
+const dynamic_context_service_1 = require("./dynamic-context.service");
+const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
+const math_expression_service_1 = require("./math-expression.service");
+const conditional_values_service_1 = require("./conditional-values.service");
+exports.LogicService = new (class LogicService {
     resolve(value, context) {
         if (typeof value === 'number' ||
             typeof value === 'boolean' ||
@@ -11,15 +14,15 @@ export const LogicService = new (class LogicService {
             return value;
         }
         if (typeof value === 'string') {
-            if (DynamicReferencePattern.variable.test(value)) {
+            if (dynamic_reference_pattern_1.DynamicReferencePattern.variable.test(value)) {
                 return this.resolveVariable(value, context);
             }
-            else if (DynamicReferencePattern.property.test(value)) {
+            else if (dynamic_reference_pattern_1.DynamicReferencePattern.property.test(value)) {
                 return this.resolveProperty(value, context);
             }
         }
         if (Array.isArray(value)) {
-            const innerContext = DynamicContextService.cloneContext(context);
+            const innerContext = dynamic_context_service_1.DynamicContextService.cloneContext(context);
             for (let i = 0; i < value.length; i++) {
                 const currentValue = this.resolve(value[i], innerContext);
                 if (i === value.length - 1) {
@@ -32,10 +35,10 @@ export const LogicService = new (class LogicService {
         }
         const conditional = value;
         if (conditional?.if) {
-            return ConditionalValuesService.resolve(conditional, context);
+            return conditional_values_service_1.ConditionalValuesService.resolve(conditional, context);
         }
         const expression = value;
-        return MathExpressionService.resolve(expression, context);
+        return math_expression_service_1.MathExpressionService.resolve(expression, context);
     }
     resolveVariable(name, context) {
         const pathParts = name.split('.');

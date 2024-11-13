@@ -1,12 +1,15 @@
-import { BooleanLogicTypeEnum } from '../enums/boolean-logic-type.enum';
-import { LogicService } from './logic.service';
-export const ConditionService = new (class ConditionService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConditionService = void 0;
+const boolean_logic_type_enum_1 = require("../enums/boolean-logic-type.enum");
+const logic_service_1 = require("./logic.service");
+exports.ConditionService = new (class ConditionService {
     comparisons = [
-        BooleanLogicTypeEnum.EQUAL,
-        BooleanLogicTypeEnum.GREATER_THAN,
-        BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL,
-        BooleanLogicTypeEnum.LESS_THAN,
-        BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL,
     ];
     /**
      * @returns <code>true</code> if the result of the test is true, otherwise
@@ -14,7 +17,7 @@ export const ConditionService = new (class ConditionService {
      */
     testCondition(condition, context, handler) {
         if (typeof condition === 'string') {
-            const parsed = LogicService.resolve(condition, context);
+            const parsed = logic_service_1.LogicService.resolve(condition, context);
             if (typeof parsed === 'string' && parsed === condition) {
                 return parsed;
             }
@@ -30,10 +33,10 @@ export const ConditionService = new (class ConditionService {
         if (handler !== undefined && handler.canTest(logic.type)) {
             return handler.testLogic(context, logic, handler);
         }
-        if (logic.type === BooleanLogicTypeEnum.NONE) {
+        if (logic.type === boolean_logic_type_enum_1.BooleanLogicTypeEnum.NONE) {
             return logic.invert ? true : logic;
         }
-        if (!Object.values(BooleanLogicTypeEnum).includes(logic.type)) {
+        if (!Object.values(boolean_logic_type_enum_1.BooleanLogicTypeEnum).includes(logic.type)) {
             console.warn('Unknown logic type ' + logic.type);
             return logic;
         }
@@ -51,17 +54,17 @@ export const ConditionService = new (class ConditionService {
             this.testCondition(condition, context, handler),
         ]);
         switch (logic.type) {
-            case BooleanLogicTypeEnum.AND:
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.AND:
                 const firstFalse = conditions.find((c) => c[1] !== true);
                 return firstFalse == null ? true : firstFalse[1];
-            case BooleanLogicTypeEnum.OR:
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.OR:
                 return conditions.find((c) => c[1] === true) != null ? true : logic;
-            case BooleanLogicTypeEnum.NAND:
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NAND:
                 return conditions.find((c) => c[1] !== true) != null ? true : logic;
-            case BooleanLogicTypeEnum.NOR:
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NOR:
                 const firstTrue = conditions.find((c) => c[1] === true);
                 return firstTrue == null ? true : firstTrue[0];
-            case BooleanLogicTypeEnum.XOR:
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.XOR:
                 return conditions.length > 0 &&
                     conditions.filter((c) => c[1] === true).length > 0 ===
                         conditions.filter((c) => c[1] !== true).length > 0
@@ -76,10 +79,10 @@ export const ConditionService = new (class ConditionService {
             ? (logic.debugLabel ?? 'Test') + (logic.invert ? ' (invert)' : '')
             : undefined;
         switch (logic.type) {
-            case BooleanLogicTypeEnum.EQUAL: {
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL: {
                 const valueLogic = logic;
-                const input = LogicService.resolve(valueLogic.value, context);
-                const value = LogicService.resolve(valueLogic.equals, context);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context);
+                const value = logic_service_1.LogicService.resolve(valueLogic.equals, context);
                 let result;
                 if (Array.isArray(value)) {
                     if (Array.isArray(input)) {
@@ -104,40 +107,40 @@ export const ConditionService = new (class ConditionService {
                 }
                 return result !== logic.invert ? true : logic;
             }
-            case BooleanLogicTypeEnum.GREATER_THAN: {
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN: {
                 const valueLogic = logic;
-                const input = LogicService.resolve(valueLogic.value, context);
-                const value = LogicService.resolve(valueLogic.greaterThan, context);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context);
+                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThan, context);
                 const result = input > value;
                 if (logic.debug) {
                     console.log(debugLabel, input, '>', value, '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
-            case BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
                 const valueLogic = logic;
-                const input = LogicService.resolve(valueLogic.value, context);
-                const value = LogicService.resolve(valueLogic.greaterThanOrEqual, context);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context);
+                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThanOrEqual, context);
                 const result = input >= value;
                 if (logic.debug) {
                     console.log(debugLabel, input, '>=', value, '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
-            case BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
                 const valueLogic = logic;
-                const input = LogicService.resolve(valueLogic.value, context);
-                const value = LogicService.resolve(valueLogic.lessThanOrEqual, context);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context);
+                const value = logic_service_1.LogicService.resolve(valueLogic.lessThanOrEqual, context);
                 const result = input <= value;
                 if (logic.debug) {
                     console.log(debugLabel, input, '<=', value, '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
-            case BooleanLogicTypeEnum.LESS_THAN: {
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN: {
                 const valueLogic = logic;
-                const input = LogicService.resolve(valueLogic.value, context);
-                const value = LogicService.resolve(valueLogic.lessThan, context);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context);
+                const value = logic_service_1.LogicService.resolve(valueLogic.lessThan, context);
                 const result = input < value;
                 if (logic.debug) {
                     console.log(debugLabel, input, '<', value, '=', result);
