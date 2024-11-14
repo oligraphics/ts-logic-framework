@@ -10,7 +10,7 @@ import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto';
 import { ConditionalValuesService } from './conditional-values.service';
 
 export const LogicService = new (class LogicService {
-  resolve<T>(value: DynamicValue, context: DynamicContext): T {
+  resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
     if (
       typeof value === 'number' ||
       typeof value === 'boolean' ||
@@ -25,21 +25,30 @@ export const LogicService = new (class LogicService {
         return this.resolveVariable<T>(value, context);
       } else if (DynamicReferencePattern.property.test(value)) {
         return this.resolveProperty<T>(value, context);
+      } else {
+        return value as T;
       }
     }
 
     if (Array.isArray(value)) {
-      const innerContext: DynamicContext =
-        DynamicContextService.cloneContext(context);
-      for (let i = 0; i < value.length; i++) {
-        const currentValue = this.resolve(value[i], innerContext);
-        if (i === value.length - 1) {
-          return currentValue as T;
+      if (value.length > 0 && (value[0] as MathExpressionStepDto)?.operation) {
+        const innerContext: DynamicContext =
+          DynamicContextService.cloneContext(context);
+        for (let i = 0; i < value.length; i++) {
+          const currentValue = this.resolve(value[i], innerContext);
+          if (i === value.length - 1) {
+            return currentValue as T;
+          }
+          const expression = value[i] as MathExpressionStepDto;
+          const variable =
+            (expression ? expression.result : undefined) ?? 'value';
+          innerContext[`#${variable}`] = currentValue;
         }
-        const expression = value[i] as MathExpressionStepDto;
-        const variable =
-          (expression ? expression.result : undefined) ?? 'value';
-        innerContext[`#${variable}`] = currentValue;
+      } else {
+        for (let i = 0; i < value.length; i += 1) {
+          value[i] = this.resolve(value[i], context);
+        }
+        return value as T;
       }
     }
 
