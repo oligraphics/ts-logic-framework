@@ -108,8 +108,16 @@ export const ConditionService = new (class ConditionService {
     switch (logic.type) {
       case BooleanLogicTypeEnum.EQUAL: {
         const valueLogic = logic as EqualConditionDto;
-        const value = LogicService.resolve(valueLogic.value, context, true);
-        const equals = LogicService.resolve(valueLogic.equals, context, true);
+        const value = LogicService.resolve(
+          valueLogic.value,
+          context,
+          logic.debug,
+        );
+        const equals = LogicService.resolve(
+          valueLogic.equals,
+          context,
+          logic.debug,
+        );
         let result: boolean;
         if (Array.isArray(equals)) {
           if (Array.isArray(value)) {
@@ -140,10 +148,15 @@ export const ConditionService = new (class ConditionService {
       }
       case BooleanLogicTypeEnum.GREATER_THAN: {
         const valueLogic = logic as GreaterThanConditionDto;
-        const input = LogicService.resolve(valueLogic.value, context) as number;
+        const input = LogicService.resolve(
+          valueLogic.value,
+          context,
+          logic.debug,
+        ) as number;
         const value = LogicService.resolve(
           valueLogic.greaterThan,
           context,
+          logic.debug,
         ) as number;
         const result = input > value;
         if (logic.debug) {
@@ -160,10 +173,15 @@ export const ConditionService = new (class ConditionService {
       }
       case BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
         const valueLogic = logic as GreaterThanOrEqualConditionDto;
-        const input = LogicService.resolve(valueLogic.value, context) as number;
+        const input = LogicService.resolve(
+          valueLogic.value,
+          context,
+          logic.debug,
+        ) as number;
         const value = LogicService.resolve(
           valueLogic.greaterThanOrEqual,
           context,
+          logic.debug,
         ) as number;
         const result = input >= value;
         if (logic.debug) {
@@ -180,10 +198,15 @@ export const ConditionService = new (class ConditionService {
       }
       case BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
         const valueLogic = logic as LessThanOrEqualConditionDto;
-        const input = LogicService.resolve(valueLogic.value, context) as number;
+        const input = LogicService.resolve(
+          valueLogic.value,
+          context,
+          logic.debug,
+        ) as number;
         const value = LogicService.resolve(
           valueLogic.lessThanOrEqual,
           context,
+          logic.debug,
         ) as number;
         const result = input <= value;
         if (logic.debug) {
@@ -200,10 +223,15 @@ export const ConditionService = new (class ConditionService {
       }
       case BooleanLogicTypeEnum.LESS_THAN: {
         const valueLogic = logic as LessThanConditionDto;
-        const input = LogicService.resolve(valueLogic.value, context) as number;
+        const input = LogicService.resolve(
+          valueLogic.value,
+          context,
+          logic.debug,
+        ) as number;
         const value = LogicService.resolve(
           valueLogic.lessThan,
           context,
+          logic.debug,
         ) as number;
         const result = input < value;
         if (logic.debug) {

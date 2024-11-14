@@ -8,9 +8,9 @@ exports.ConditionalValuesService = new (class ConditionalValuesService {
         const conditionResult = condition_service_1.ConditionService.testCondition(value.if, context);
         if (value.debug) {
             const label = value.debugLabel ?? 'Condition';
-            console.log(`${label}: ${conditionResult}`);
+            console.log(`${label}: ${JSON.stringify(conditionResult)}`);
         }
-        return logic_service_1.LogicService.resolve(conditionResult ? value.true : value.false, context);
+        return logic_service_1.LogicService.resolve(conditionResult === true ? value.true : value.false, context);
     }
 })();
 //# sourceMappingURL=conditional-values.service.js.map

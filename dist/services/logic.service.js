@@ -6,36 +6,74 @@ const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.patte
 const math_expression_service_1 = require("./math-expression.service");
 const conditional_values_service_1 = require("./conditional-values.service");
 exports.LogicService = new (class LogicService {
-    resolve(value, context) {
+    resolve(value, context, debug = false) {
+        if (debug) {
+            console.log('Looking up', JSON.stringify(value));
+        }
         if (typeof value === 'number' ||
             typeof value === 'boolean' ||
             value === null ||
             value === undefined) {
+            if (debug) {
+                console.log(value, 'is a primitive');
+            }
             return value;
         }
         if (typeof value === 'string') {
             if (dynamic_reference_pattern_1.DynamicReferencePattern.variable.test(value)) {
+                if (debug) {
+                    console.log(value, 'is a variable reference');
+                }
                 return this.resolveVariable(value, context);
             }
             else if (dynamic_reference_pattern_1.DynamicReferencePattern.property.test(value)) {
+                if (debug) {
+                    console.log(value, 'is a property reference');
+                }
                 return this.resolveProperty(value, context);
+            }
+            else {
+                if (debug) {
+                    console.log(value, 'is a regular string');
+                }
+                return value;
             }
         }
         if (Array.isArray(value)) {
-            const innerContext = dynamic_context_service_1.DynamicContextService.cloneContext(context);
-            for (let i = 0; i < value.length; i++) {
-                const currentValue = this.resolve(value[i], innerContext);
-                if (i === value.length - 1) {
-                    return currentValue;
+            if (value.length > 0 && value[0]?.operation) {
+                if (debug) {
+                    console.log('Value is Function');
                 }
-                const expression = value[i];
-                const variable = (expression ? expression.result : undefined) ?? 'value';
-                innerContext[`#${variable}`] = currentValue;
+                const innerContext = dynamic_context_service_1.DynamicContextService.cloneContext(context);
+                for (let i = 0; i < value.length; i++) {
+                    const currentValue = this.resolve(value[i], innerContext);
+                    if (i === value.length - 1) {
+                        return currentValue;
+                    }
+                    const expression = value[i];
+                    const variable = (expression ? expression.result : undefined) ?? 'value';
+                    innerContext[`#${variable}`] = currentValue;
+                }
+            }
+            else {
+                if (debug) {
+                    console.log('Value is a regular array');
+                }
+                for (let i = 0; i < value.length; i += 1) {
+                    value[i] = this.resolve(value[i], context);
+                }
+                return value;
             }
         }
         const conditional = value;
         if (conditional?.if) {
+            if (debug) {
+                console.log('Value is a conditional');
+            }
             return conditional_values_service_1.ConditionalValuesService.resolve(conditional, context);
+        }
+        if (debug) {
+            console.log('Value is a math expression');
         }
         const expression = value;
         return math_expression_service_1.MathExpressionService.resolve(expression, context);
