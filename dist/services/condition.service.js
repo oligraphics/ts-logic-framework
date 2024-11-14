@@ -103,7 +103,7 @@ exports.ConditionService = new (class ConditionService {
                     result = input === value;
                 }
                 if (logic.debug) {
-                    console.log(debugLabel, input, Array.isArray(value) ? 'in' : '=', value, '=', result);
+                    console.log(debugLabel, JSON.stringify(input), Array.isArray(value) ? 'in' : '=', JSON.stringify(value), '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
@@ -113,7 +113,7 @@ exports.ConditionService = new (class ConditionService {
                 const value = logic_service_1.LogicService.resolve(valueLogic.greaterThan, context);
                 const result = input > value;
                 if (logic.debug) {
-                    console.log(debugLabel, input, '>', value, '=', result);
+                    console.log(debugLabel, JSON.stringify(input), '>', JSON.stringify(value), '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
@@ -123,7 +123,7 @@ exports.ConditionService = new (class ConditionService {
                 const value = logic_service_1.LogicService.resolve(valueLogic.greaterThanOrEqual, context);
                 const result = input >= value;
                 if (logic.debug) {
-                    console.log(debugLabel, input, '>=', value, '=', result);
+                    console.log(debugLabel, JSON.stringify(input), '>=', JSON.stringify(value), '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
@@ -133,7 +133,7 @@ exports.ConditionService = new (class ConditionService {
                 const value = logic_service_1.LogicService.resolve(valueLogic.lessThanOrEqual, context);
                 const result = input <= value;
                 if (logic.debug) {
-                    console.log(debugLabel, input, '<=', value, '=', result);
+                    console.log(debugLabel, JSON.stringify(input), '<=', JSON.stringify(value), '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
@@ -143,7 +143,7 @@ exports.ConditionService = new (class ConditionService {
                 const value = logic_service_1.LogicService.resolve(valueLogic.lessThan, context);
                 const result = input < value;
                 if (logic.debug) {
-                    console.log(debugLabel, input, '<', value, '=', result);
+                    console.log(debugLabel, JSON.stringify(input), '<', JSON.stringify(value), '=', result);
                 }
                 return result !== logic.invert ? true : logic;
             }
