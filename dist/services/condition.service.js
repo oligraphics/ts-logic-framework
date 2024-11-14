@@ -75,8 +75,9 @@ exports.ConditionService = new (class ConditionService {
         }
     }
     testComparison(logic, context) {
+        const invert = logic.invert === true;
         const debugLabel = logic.debug
-            ? (logic.debugLabel ?? 'Test') + (logic.invert ? ' (invert)' : '')
+            ? (logic.debugLabel ?? 'Test') + (invert ? ' (invert)' : '')
             : undefined;
         switch (logic.type) {
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL: {
@@ -105,7 +106,7 @@ exports.ConditionService = new (class ConditionService {
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(input), Array.isArray(value) ? 'in' : '=', JSON.stringify(value), '=', result);
                 }
-                return result !== logic.invert ? true : logic;
+                return result !== invert ? true : logic;
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN: {
                 const valueLogic = logic;
@@ -115,7 +116,7 @@ exports.ConditionService = new (class ConditionService {
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(input), '>', JSON.stringify(value), '=', result);
                 }
-                return result !== logic.invert ? true : logic;
+                return result !== invert ? true : logic;
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
                 const valueLogic = logic;
@@ -125,7 +126,7 @@ exports.ConditionService = new (class ConditionService {
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(input), '>=', JSON.stringify(value), '=', result);
                 }
-                return result !== logic.invert ? true : logic;
+                return result !== invert ? true : logic;
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
                 const valueLogic = logic;
@@ -135,7 +136,7 @@ exports.ConditionService = new (class ConditionService {
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(input), '<=', JSON.stringify(value), '=', result);
                 }
-                return result !== logic.invert ? true : logic;
+                return result !== invert ? true : logic;
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN: {
                 const valueLogic = logic;
@@ -145,7 +146,7 @@ exports.ConditionService = new (class ConditionService {
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(input), '<', JSON.stringify(value), '=', result);
                 }
-                return result !== logic.invert ? true : logic;
+                return result !== invert ? true : logic;
             }
             default: {
                 throw new Error(`Comparison type ${logic.type} is not implemented.`);
