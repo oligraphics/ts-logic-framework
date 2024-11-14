@@ -108,30 +108,30 @@ export const ConditionService = new (class ConditionService {
     switch (logic.type) {
       case BooleanLogicTypeEnum.EQUAL: {
         const valueLogic = logic as EqualConditionDto;
-        const input = LogicService.resolve(valueLogic.value, context);
-        const value = LogicService.resolve(valueLogic.equals, context);
+        const value = LogicService.resolve(valueLogic.value, context, true);
+        const equals = LogicService.resolve(valueLogic.equals, context, true);
         let result: boolean;
-        if (Array.isArray(value)) {
-          if (Array.isArray(input)) {
+        if (Array.isArray(equals)) {
+          if (Array.isArray(value)) {
             // All elements in value must be included in input
-            result = value.find((v) => !input.includes(v)) === null;
+            result = equals.find((v) => !value.includes(v)) === undefined;
           } else {
             // Value must include the input
-            result = value.includes(input);
+            result = equals.includes(value);
           }
-        } else if (Array.isArray(input)) {
+        } else if (Array.isArray(value)) {
           // Input must include the value
-          result = input.includes(value);
+          result = value.includes(equals);
         } else {
           // Input must equal value
-          result = input === value;
+          result = value === equals;
         }
         if (logic.debug) {
           console.log(
             debugLabel,
-            JSON.stringify(input),
-            Array.isArray(value) ? 'in' : '=',
             JSON.stringify(value),
+            Array.isArray(equals) ? 'in' : '=',
+            JSON.stringify(equals),
             '=',
             result,
           );

@@ -38,7 +38,17 @@
       "debug": true,
       "operation": "add",
       "a": "#apples",
-      "b": "#oranges"
+      "b": {
+        "if": {
+          "debug": true,
+          "debugLabel": "Array check",
+          "type": "equal",
+          "value": ["oranges", "pears"],
+          "equals": ["oranges", "pears"]
+        },
+        "true": "#oranges",
+        "false": 666
+      }
     }
   ]
 }
