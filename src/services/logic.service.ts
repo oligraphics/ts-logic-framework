@@ -11,27 +11,45 @@ import { ConditionalValuesService } from './conditional-values.service';
 
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
+    if (debug) {
+      console.log('Looking up', JSON.stringify(value));
+    }
     if (
       typeof value === 'number' ||
       typeof value === 'boolean' ||
       value === null ||
       value === undefined
     ) {
+      if (debug) {
+        console.log(value, 'is a primitive');
+      }
       return value as T;
     }
 
     if (typeof value === 'string') {
       if (DynamicReferencePattern.variable.test(value)) {
+        if (debug) {
+          console.log(value, 'is a variable reference');
+        }
         return this.resolveVariable<T>(value, context);
       } else if (DynamicReferencePattern.property.test(value)) {
+        if (debug) {
+          console.log(value, 'is a property reference');
+        }
         return this.resolveProperty<T>(value, context);
       } else {
+        if (debug) {
+          console.log(value, 'is a regular string');
+        }
         return value as T;
       }
     }
 
     if (Array.isArray(value)) {
       if (value.length > 0 && (value[0] as MathExpressionStepDto)?.operation) {
+        if (debug) {
+          console.log('Value is Function');
+        }
         const innerContext: DynamicContext =
           DynamicContextService.cloneContext(context);
         for (let i = 0; i < value.length; i++) {
@@ -45,6 +63,9 @@ export const LogicService = new (class LogicService {
           innerContext[`#${variable}`] = currentValue;
         }
       } else {
+        if (debug) {
+          console.log('Value is a regular array');
+        }
         for (let i = 0; i < value.length; i += 1) {
           value[i] = this.resolve(value[i], context);
         }
@@ -54,9 +75,15 @@ export const LogicService = new (class LogicService {
 
     const conditional: ConditionalValueDto = value as ConditionalValueDto;
     if (conditional?.if) {
+      if (debug) {
+        console.log('Value is a conditional');
+      }
       return ConditionalValuesService.resolve(conditional, context);
     }
 
+    if (debug) {
+      console.log('Value is a math expression');
+    }
     const expression: MathExpressionDto = value as MathExpressionDto;
     return MathExpressionService.resolve(expression, context) as T;
   }

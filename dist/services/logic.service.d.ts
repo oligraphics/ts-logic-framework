@@ -2,7 +2,7 @@ import Rand from 'rand-seed';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
 export declare const LogicService: {
-    resolve<T>(value: DynamicValue, context: DynamicContext): T;
+    resolve<T>(value: DynamicValue, context: DynamicContext, debug?: boolean): T;
     resolveVariable<T>(name: string, context: DynamicContext): T;
     resolveProperty<T>(name: string, context: DynamicContext): T;
     createVariableMap(variables: Map<string, any>, parentPath: string): Map<string, any>;
