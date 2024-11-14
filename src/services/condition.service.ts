@@ -101,8 +101,9 @@ export const ConditionService = new (class ConditionService {
     logic: ConditionDto,
     context: DynamicContext,
   ): true | Condition {
+    const invert = logic.invert === true;
     const debugLabel = logic.debug
-      ? (logic.debugLabel ?? 'Test') + (logic.invert ? ' (invert)' : '')
+      ? (logic.debugLabel ?? 'Test') + (invert ? ' (invert)' : '')
       : undefined;
     switch (logic.type) {
       case BooleanLogicTypeEnum.EQUAL: {
@@ -135,7 +136,7 @@ export const ConditionService = new (class ConditionService {
             result,
           );
         }
-        return result !== logic.invert ? true : logic;
+        return result !== invert ? true : logic;
       }
       case BooleanLogicTypeEnum.GREATER_THAN: {
         const valueLogic = logic as GreaterThanConditionDto;
@@ -155,7 +156,7 @@ export const ConditionService = new (class ConditionService {
             result,
           );
         }
-        return result !== logic.invert ? true : logic;
+        return result !== invert ? true : logic;
       }
       case BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
         const valueLogic = logic as GreaterThanOrEqualConditionDto;
@@ -175,7 +176,7 @@ export const ConditionService = new (class ConditionService {
             result,
           );
         }
-        return result !== logic.invert ? true : logic;
+        return result !== invert ? true : logic;
       }
       case BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
         const valueLogic = logic as LessThanOrEqualConditionDto;
@@ -195,7 +196,7 @@ export const ConditionService = new (class ConditionService {
             result,
           );
         }
-        return result !== logic.invert ? true : logic;
+        return result !== invert ? true : logic;
       }
       case BooleanLogicTypeEnum.LESS_THAN: {
         const valueLogic = logic as LessThanConditionDto;
@@ -215,7 +216,7 @@ export const ConditionService = new (class ConditionService {
             result,
           );
         }
-        return result !== logic.invert ? true : logic;
+        return result !== invert ? true : logic;
       }
       default: {
         throw new Error(`Comparison type ${logic.type} is not implemented.`);
