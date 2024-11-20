@@ -1,4 +1,5 @@
 export * from './dto/conditionals/conditional-value.dto';
+export * from './dto/conditions/condition.dto';
 export * from './dto/conditions/comparisons/equal.condition.dto';
 export * from './dto/conditions/comparisons/greater-than.condition.dto';
 export * from './dto/conditions/comparisons/greater-than-or-equal.condition.dto';
@@ -20,6 +21,7 @@ export * from './services/condition.service';
 export * from './services/conditional-values.service';
 export * from './services/dynamic-context.service';
 export * from './services/logic.service';
+export * from './services/logic-gate.service';
 export * from './services/math-expression.service';
 export * from './services/math-operation.service';
 export * from './services/string-utility.service';

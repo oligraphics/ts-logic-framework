@@ -24,9 +24,14 @@
         "b": {
           "if": {
             "debug": true,
-            "type": "greater_than",
-            "value": "#apples",
-            "greaterThan": 2
+            "type": "and",
+            "conditions": [
+              {
+                "type": "greater_than",
+                "value": "#apples",
+                "greaterThan": 2
+              }
+            ]
           },
           "true": 1,
           "false": 0
@@ -43,8 +48,14 @@
           "debug": true,
           "debugLabel": "Array check",
           "type": "equal",
-          "value": ["oranges", "pears"],
-          "equals": ["oranges", "pears"]
+          "value": [
+            "oranges",
+            "pears"
+          ],
+          "equals": [
+            "oranges",
+            "pears"
+          ]
         },
         "true": "#oranges",
         "false": 666

@@ -1,6 +1,5 @@
 import { Condition } from '../interfaces/condition.interface';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
-import { ConditionLogicHandlerInterface } from '../interfaces/condition-logic-handler.interface';
 import { ConditionDto } from '../dto/conditions/condition.dto';
 import { BooleanLogicTypeEnum } from '../enums/boolean-logic-type.enum';
 import { EqualConditionDto } from '../dto/conditions/comparisons/equal.condition.dto';
@@ -10,6 +9,7 @@ import { GreaterThanConditionDto } from '../dto/conditions/comparisons/greater-t
 import { LessThanConditionDto } from '../dto/conditions/comparisons/less-than.condition.dto';
 import { LessThanOrEqualConditionDto } from '../dto/conditions/comparisons/less-than-or-equal.condition.dto';
 import { GreaterThanOrEqualConditionDto } from '../dto/conditions/comparisons/greater-than-or-equal.condition.dto';
+import { LogicGateService } from './logic-gate.service';
 
 export const ConditionService = new (class ConditionService {
   comparisons = [
@@ -27,14 +27,13 @@ export const ConditionService = new (class ConditionService {
   testCondition(
     condition: Condition,
     context: DynamicContext,
-    handler?: ConditionLogicHandlerInterface,
   ): true | Condition {
     if (typeof condition === 'string') {
       const parsed = LogicService.resolve(condition, context);
       if (typeof parsed === 'string' && parsed === condition) {
         return parsed;
       }
-      return this.testCondition(parsed as Condition, context, handler);
+      return this.testCondition(parsed as Condition, context);
     }
 
     if (typeof condition === 'boolean') {
@@ -45,10 +44,6 @@ export const ConditionService = new (class ConditionService {
     }
 
     const logic = condition as ConditionDto;
-
-    if (handler !== undefined && handler.canTest(logic.type)) {
-      return handler.testLogic(context, logic, handler);
-    }
 
     if (logic.type === BooleanLogicTypeEnum.NONE) {
       return logic.invert ? true : logic;
@@ -63,38 +58,7 @@ export const ConditionService = new (class ConditionService {
       return this.testComparison(condition, context);
     }
 
-    const logicGate = <LogicGateDto>logic;
-    /**
-     * @var conditions Array of key value pairs where the key is the condition
-     * and the value is either true or the condition <code>true</code> means
-     * the condition tested true, otherwise the condition is returned as the value.
-     */
-    const conditions: [Condition, true | Condition][] =
-      logicGate.conditions.map((condition) => [
-        condition,
-        this.testCondition(condition, context, handler),
-      ]);
-
-    switch (logic.type) {
-      case BooleanLogicTypeEnum.AND:
-        const firstFalse = conditions.find((c) => c[1] !== true);
-        return firstFalse == null ? true : firstFalse[1];
-      case BooleanLogicTypeEnum.OR:
-        return conditions.find((c) => c[1] === true) != null ? true : logic;
-      case BooleanLogicTypeEnum.NAND:
-        return conditions.find((c) => c[1] !== true) != null ? true : logic;
-      case BooleanLogicTypeEnum.NOR:
-        const firstTrue = conditions.find((c) => c[1] === true);
-        return firstTrue == null ? true : firstTrue[0];
-      case BooleanLogicTypeEnum.XOR:
-        return conditions.length > 0 &&
-          conditions.filter((c) => c[1] === true).length > 0 ===
-            conditions.filter((c) => c[1] !== true).length > 0
-          ? true
-          : logic;
-      default:
-        return logic;
-    }
+    return LogicGateService.test(<LogicGateDto>logic, context);
   }
 
   testComparison(
