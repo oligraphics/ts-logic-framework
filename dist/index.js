@@ -15,6 +15,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./dto/conditionals/conditional-value.dto"), exports);
+__exportStar(require("./dto/conditions/condition.dto"), exports);
 __exportStar(require("./dto/conditions/comparisons/equal.condition.dto"), exports);
 __exportStar(require("./dto/conditions/comparisons/greater-than.condition.dto"), exports);
 __exportStar(require("./dto/conditions/comparisons/greater-than-or-equal.condition.dto"), exports);
@@ -36,6 +37,7 @@ __exportStar(require("./services/condition.service"), exports);
 __exportStar(require("./services/conditional-values.service"), exports);
 __exportStar(require("./services/dynamic-context.service"), exports);
 __exportStar(require("./services/logic.service"), exports);
+__exportStar(require("./services/logic-gate.service"), exports);
 __exportStar(require("./services/math-expression.service"), exports);
 __exportStar(require("./services/math-operation.service"), exports);
 __exportStar(require("./services/string-utility.service"), exports);

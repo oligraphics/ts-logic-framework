@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ConditionService = void 0;
 const boolean_logic_type_enum_1 = require("../enums/boolean-logic-type.enum");
 const logic_service_1 = require("./logic.service");
+const logic_gate_service_1 = require("./logic-gate.service");
 exports.ConditionService = new (class ConditionService {
     comparisons = [
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL,
@@ -15,13 +16,13 @@ exports.ConditionService = new (class ConditionService {
      * @returns <code>true</code> if the result of the test is true, otherwise
      * returns the condition that failed.
      */
-    testCondition(condition, context, handler) {
+    testCondition(condition, context) {
         if (typeof condition === 'string') {
             const parsed = logic_service_1.LogicService.resolve(condition, context);
             if (typeof parsed === 'string' && parsed === condition) {
                 return parsed;
             }
-            return this.testCondition(parsed, context, handler);
+            return this.testCondition(parsed, context);
         }
         if (typeof condition === 'boolean') {
             return condition ? true : condition;
@@ -30,9 +31,6 @@ exports.ConditionService = new (class ConditionService {
             return condition >= 1 ? true : condition;
         }
         const logic = condition;
-        if (handler !== undefined && handler.canTest(logic.type)) {
-            return handler.testLogic(context, logic, handler);
-        }
         if (logic.type === boolean_logic_type_enum_1.BooleanLogicTypeEnum.NONE) {
             return logic.invert ? true : logic;
         }
@@ -43,36 +41,7 @@ exports.ConditionService = new (class ConditionService {
         if (this.comparisons.includes(logic.type)) {
             return this.testComparison(condition, context);
         }
-        const logicGate = logic;
-        /**
-         * @var conditions Array of key value pairs where the key is the condition
-         * and the value is either true or the condition <code>true</code> means
-         * the condition tested true, otherwise the condition is returned as the value.
-         */
-        const conditions = logicGate.conditions.map((condition) => [
-            condition,
-            this.testCondition(condition, context, handler),
-        ]);
-        switch (logic.type) {
-            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.AND:
-                const firstFalse = conditions.find((c) => c[1] !== true);
-                return firstFalse == null ? true : firstFalse[1];
-            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.OR:
-                return conditions.find((c) => c[1] === true) != null ? true : logic;
-            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NAND:
-                return conditions.find((c) => c[1] !== true) != null ? true : logic;
-            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NOR:
-                const firstTrue = conditions.find((c) => c[1] === true);
-                return firstTrue == null ? true : firstTrue[0];
-            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.XOR:
-                return conditions.length > 0 &&
-                    conditions.filter((c) => c[1] === true).length > 0 ===
-                        conditions.filter((c) => c[1] !== true).length > 0
-                    ? true
-                    : logic;
-            default:
-                return logic;
-        }
+        return logic_gate_service_1.LogicGateService.test(logic, context);
     }
     testComparison(logic, context) {
         const invert = logic.invert === true;
