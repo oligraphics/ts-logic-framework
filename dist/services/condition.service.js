@@ -41,7 +41,13 @@ exports.ConditionService = new (class ConditionService {
         if (this.comparisons.includes(logic.type)) {
             return this.testComparison(condition, context);
         }
-        return logic_gate_service_1.LogicGateService.test(logic, context);
+        const logicGateResult = logic_gate_service_1.LogicGateService.test(logic, context);
+        if (logic.invert) {
+            return logicGateResult === true ? logicGateResult : true;
+        }
+        else {
+            return logicGateResult === true ? true : logicGateResult;
+        }
     }
     testComparison(logic, context) {
         const invert = logic.invert === true;
