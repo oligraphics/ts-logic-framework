@@ -106,7 +106,7 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
-        return currentValue;
+        return this.resolve(currentValue, context);
     }
     createVariableMap(variables, parentPath) {
         const result = new Map();
