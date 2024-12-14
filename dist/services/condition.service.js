@@ -4,6 +4,7 @@ exports.ConditionService = void 0;
 const boolean_logic_type_enum_1 = require("../enums/boolean-logic-type.enum");
 const logic_service_1 = require("./logic.service");
 const logic_gate_service_1 = require("./logic-gate.service");
+const equality_service_1 = require("./equality.service");
 exports.ConditionService = new (class ConditionService {
     comparisons = [
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL,
@@ -59,25 +60,7 @@ exports.ConditionService = new (class ConditionService {
                 const valueLogic = logic;
                 const value = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug);
                 const equals = logic_service_1.LogicService.resolve(valueLogic.equals, context, logic.debug);
-                let result;
-                if (Array.isArray(equals)) {
-                    if (Array.isArray(value)) {
-                        // All elements in value must be included in input
-                        result = equals.find((v) => !value.includes(v)) === undefined;
-                    }
-                    else {
-                        // Value must include the input
-                        result = equals.includes(value);
-                    }
-                }
-                else if (Array.isArray(value)) {
-                    // Input must include the value
-                    result = value.includes(equals);
-                }
-                else {
-                    // Input must equal value
-                    result = value === equals;
-                }
+                const result = equality_service_1.EqualityService.test(value, equals);
                 if (logic.debug) {
                     console.log(debugLabel, JSON.stringify(value), Array.isArray(equals) ? 'in' : '=', JSON.stringify(equals), '=', result);
                 }
