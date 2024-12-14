@@ -72,11 +72,11 @@ exports.LogicService = new (class LogicService {
             }
             return conditional_values_service_1.ConditionalValuesService.resolve(conditional, context);
         }
-        if (debug) {
-            console.log('Value is a math expression');
+        if (value?.operation) {
+            const expression = value;
+            return math_expression_service_1.MathExpressionService.resolve(expression, context);
         }
-        const expression = value;
-        return math_expression_service_1.MathExpressionService.resolve(expression, context);
+        return value;
     }
     resolveVariable(name, context) {
         const pathParts = name.split('.');
