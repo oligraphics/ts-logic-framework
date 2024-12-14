@@ -20,6 +20,7 @@ export * from './interfaces/dynamic-value.interface';
 export * from './services/condition.service';
 export * from './services/conditional-values.service';
 export * from './services/dynamic-context.service';
+export * from './services/equality.service';
 export * from './services/logic.service';
 export * from './services/logic-gate.service';
 export * from './services/math-expression.service';

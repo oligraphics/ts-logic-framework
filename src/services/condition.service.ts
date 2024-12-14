@@ -10,6 +10,7 @@ import { LessThanConditionDto } from '../dto/conditions/comparisons/less-than.co
 import { LessThanOrEqualConditionDto } from '../dto/conditions/comparisons/less-than-or-equal.condition.dto';
 import { GreaterThanOrEqualConditionDto } from '../dto/conditions/comparisons/greater-than-or-equal.condition.dto';
 import { LogicGateService } from './logic-gate.service';
+import { EqualityService } from './equality.service';
 
 export const ConditionService = new (class ConditionService {
   comparisons = [
@@ -87,22 +88,7 @@ export const ConditionService = new (class ConditionService {
           context,
           logic.debug,
         );
-        let result: boolean;
-        if (Array.isArray(equals)) {
-          if (Array.isArray(value)) {
-            // All elements in value must be included in input
-            result = equals.find((v) => !value.includes(v)) === undefined;
-          } else {
-            // Value must include the input
-            result = equals.includes(value);
-          }
-        } else if (Array.isArray(value)) {
-          // Input must include the value
-          result = value.includes(equals);
-        } else {
-          // Input must equal value
-          result = value === equals;
-        }
+        const result = EqualityService.test(value, equals);
         if (logic.debug) {
           console.log(
             debugLabel,
