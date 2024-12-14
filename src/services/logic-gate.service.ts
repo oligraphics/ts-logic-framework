@@ -32,19 +32,19 @@ export const LogicGateService = new (class LogicGateService {
 
     switch (logicGate.type) {
       case BooleanLogicTypeEnum.AND: {
-        return this._testAnd(logicGate, conditions);
+        return this._testAnd(logicGate as AndConditionDto, conditions);
       }
       case BooleanLogicTypeEnum.OR: {
-        return this._testOr(logicGate, conditions);
+        return this._testOr(logicGate as OrConditionDto, conditions);
       }
       case BooleanLogicTypeEnum.NAND: {
-        return this._testNAnd(logicGate, conditions);
+        return this._testNAnd(logicGate as NandConditionDto, conditions);
       }
       case BooleanLogicTypeEnum.NOR: {
-        return this._testNor(logicGate, conditions);
+        return this._testNor(logicGate as NorConditionDto, conditions);
       }
       case BooleanLogicTypeEnum.XOR: {
-        return this._testXOr(logicGate, conditions);
+        return this._testXOr(logicGate as XorConditionDto, conditions);
       }
       default:
         if (logicGate.debug) {
