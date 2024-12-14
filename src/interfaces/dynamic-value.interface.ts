@@ -5,6 +5,7 @@ export type DynamicValue =
   | DynamicValue[]
   | MathExpressionDto
   | ConditionalValueDto
+  | object
   | string
   | number
   | boolean

@@ -1,11 +1,13 @@
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 
 export const DynamicContextService = new (class DynamicContextService {
-  createContext(
-    props: { [key: string]: any },
-    variables?: { [key: string]: any },
-  ): DynamicContext {
-    const result: DynamicContext = {};
+  createContext<TProps extends { [key: string]: unknown }>(
+    props: TProps,
+    variables?: { [key: string]: unknown },
+  ): DynamicContext & TProps {
+    const result: DynamicContext = {
+      ...props,
+    };
     for (const [key, value] of Object.entries(props)) {
       result[`{${key}}`] = value;
     }
@@ -14,7 +16,7 @@ export const DynamicContextService = new (class DynamicContextService {
         result[`#${key}`] = value;
       }
     }
-    return result;
+    return result as DynamicContext & TProps;
   }
 
   cloneContext(input: DynamicContext): DynamicContext {

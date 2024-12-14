@@ -81,11 +81,12 @@ export const LogicService = new (class LogicService {
       return ConditionalValuesService.resolve(conditional, context);
     }
 
-    if (debug) {
-      console.log('Value is a math expression');
+    if ((value as MathExpressionDto)?.operation) {
+      const expression: MathExpressionDto = value as MathExpressionDto;
+      return MathExpressionService.resolve(expression, context) as T;
     }
-    const expression: MathExpressionDto = value as MathExpressionDto;
-    return MathExpressionService.resolve(expression, context) as T;
+
+    return value as T;
   }
 
   resolveVariable<T>(name: string, context: DynamicContext): T {
