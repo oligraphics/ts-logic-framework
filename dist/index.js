@@ -37,6 +37,7 @@ __exportStar(require("./services/condition.service"), exports);
 __exportStar(require("./services/conditional-values.service"), exports);
 __exportStar(require("./services/dynamic-context.service"), exports);
 __exportStar(require("./services/equality.service"), exports);
+__exportStar(require("./services/id.service"), exports);
 __exportStar(require("./services/logic.service"), exports);
 __exportStar(require("./services/logic-gate.service"), exports);
 __exportStar(require("./services/math-expression.service"), exports);

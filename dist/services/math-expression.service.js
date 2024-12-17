@@ -4,15 +4,8 @@ exports.MathExpressionService = void 0;
 const math_operation_service_js_1 = require("./math-operation.service.js");
 const operation_enum_1 = require("../enums/operation.enum");
 const logic_service_1 = require("./logic.service");
-const node_crypto_1 = require("node:crypto");
+const id_service_1 = require("./id.service");
 exports.MathExpressionService = new (class MathExpressionService {
-    _operators = new Map([
-        [operation_enum_1.OperationEnum.ADD, '+'],
-        [operation_enum_1.OperationEnum.SUBTRACT, '-'],
-        [operation_enum_1.OperationEnum.MULTIPLY, '*'],
-        [operation_enum_1.OperationEnum.DIVIDE, '/'],
-        [operation_enum_1.OperationEnum.POW, '**'],
-    ]);
     resolve(expression, context) {
         if ('number' === typeof expression) {
             return expression;
@@ -41,8 +34,7 @@ exports.MathExpressionService = new (class MathExpressionService {
         do {
             functionMatch = functionPattern.exec(current);
             if (functionMatch) {
-                console.log('Function match', functionMatch[0]);
-                const matchId = (0, node_crypto_1.randomBytes)(8).toString('hex');
+                const matchId = id_service_1.IdService.createRandomId();
                 current = current.replace(functionMatch[0], `{${matchId}}`);
                 placeholders.set(`{${matchId}}`, this._parseFunction(functionMatch[1], functionMatch[2].split(',')));
             }
@@ -51,8 +43,7 @@ exports.MathExpressionService = new (class MathExpressionService {
         do {
             innerMostBracketsMatch = innerMostBracketsPattern.exec(current);
             if (innerMostBracketsMatch) {
-                console.log('Bracket match', innerMostBracketsMatch[0]);
-                const matchId = (0, node_crypto_1.randomBytes)(8).toString('hex');
+                const matchId = id_service_1.IdService.createRandomId();
                 current = current.replace(innerMostBracketsMatch[0], `{${matchId}}`);
                 placeholders.set(`{${matchId}}`, this.parse(innerMostBracketsMatch[1]));
             }
@@ -61,8 +52,7 @@ exports.MathExpressionService = new (class MathExpressionService {
         do {
             strokeOperatorsMatch = strokeOperatorsPattern.exec(current);
             if (strokeOperatorsMatch) {
-                console.log('Stroke operator match', strokeOperatorsMatch[1], strokeOperatorsMatch[2], strokeOperatorsMatch[3]);
-                const matchId = (0, node_crypto_1.randomBytes)(8).toString('hex');
+                const matchId = id_service_1.IdService.createRandomId();
                 current = current.replace(strokeOperatorsMatch[0], `{${matchId}}`);
                 placeholders.set(`{${matchId}}`, this._parseOperator(strokeOperatorsMatch[1], strokeOperatorsMatch[2], strokeOperatorsMatch[3]));
             }
@@ -71,8 +61,7 @@ exports.MathExpressionService = new (class MathExpressionService {
         do {
             dotOperatorsMatch = dotOperatorsPattern.exec(current);
             if (dotOperatorsMatch) {
-                console.log('Dot operator match', dotOperatorsMatch[1], dotOperatorsMatch[2], dotOperatorsMatch[3]);
-                const matchId = (0, node_crypto_1.randomBytes)(8).toString('hex');
+                const matchId = id_service_1.IdService.createRandomId();
                 current = current.replace(dotOperatorsMatch[0], `{${matchId}}`);
                 placeholders.set(`{${matchId}}`, this._parseOperator(dotOperatorsMatch[1], dotOperatorsMatch[2], dotOperatorsMatch[3]));
             }
@@ -91,7 +80,6 @@ exports.MathExpressionService = new (class MathExpressionService {
             }
             let result = stepsMap.get('result') ?? '';
             if (!result) {
-                console.log('Function did not provide a step that returns the result.', JSON.stringify(input));
                 return '';
             }
             for (const [key, value] of stepsMap) {
@@ -118,19 +106,15 @@ exports.MathExpressionService = new (class MathExpressionService {
         }
     }
     _resolve(input, placeholders) {
-        console.log('Resolve', input);
         if (typeof input === 'string') {
-            console.log('Resolve as string');
             return placeholders.has(input)
                 ? this._resolve(placeholders.get(input), placeholders)
                 : input;
         }
         if (Array.isArray(input)) {
-            console.log('Resolve as array');
             return input.map((value) => this._resolve(value, placeholders));
         }
         if (typeof input === 'object') {
-            console.log('Resolve as expression');
             const expression = input;
             return {
                 operation: expression.operation,
@@ -138,7 +122,6 @@ exports.MathExpressionService = new (class MathExpressionService {
                 b: this._resolve(expression.b, placeholders),
             };
         }
-        console.log('Resolve raw');
         return input;
     }
     _parseFunction(name, args) {
@@ -158,15 +141,6 @@ exports.MathExpressionService = new (class MathExpressionService {
             operation: math_operation_service_js_1.MathOperationService.parse(operator),
             a: a.startsWith('{') ? a : this.parse(a),
             b: b.startsWith('{') ? b : this.parse(b),
-        };
-    }
-    _parseExpression(operation, operator, parts) {
-        const a = parts[0];
-        const b = parts.slice(1).join(operator);
-        return {
-            operation: operation,
-            a: this.parse(a),
-            b: this.parse(b),
         };
     }
 })();
