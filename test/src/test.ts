@@ -1,4 +1,4 @@
-import { DynamicContext } from '../../src';
+import { DynamicContext, MathExpressionDto, MathExpressionService } from '../../src';
 import { DynamicContextService } from '../../src';
 import { readFileSync } from 'fs';
 import { LogicService } from '../../src';

@@ -4,6 +4,7 @@ import { OperationEnum } from '../enums/operation.enum';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
+import { DynamicValue } from '../interfaces/dynamic-value.interface';
 
 export const MathExpressionService = new (class MathExpressionService {
   _operators: Map<OperationEnum, string> = new Map([
@@ -52,6 +53,37 @@ export const MathExpressionService = new (class MathExpressionService {
 
     const value = parseFloat(trimmed);
     return !isNaN(value) ? value : trimmed;
+  }
+
+  stringify(input: DynamicValue, wrap?: boolean): string {
+    if (Array.isArray(input)) {
+      const stepsMap = new Map<string, string>();
+      for (const step of input) {
+        stepsMap.set(step.result ?? 'result', this.stringify(step, true));
+      }
+      let result: string = stepsMap.get('result') ?? '';
+      if (!result) {
+        console.log(
+          'Function did not provide a step that returns the result.',
+          JSON.stringify(input),
+        );
+        return '';
+      }
+      for (const [key, value] of stepsMap) {
+        result = result.replace(`#${key}`, value);
+      }
+      return result;
+    } else if (typeof input === 'object') {
+      const expression = input as MathExpressionDto;
+      const a = this.stringify(expression.a, true);
+      const b = this.stringify(expression.b, true);
+      const result = `${a} ${MathOperationService.stringify(
+        expression.operation,
+      )} ${b}`;
+      return wrap ? `(${result})` : result;
+    } else {
+      return (input?.toString() ?? '').trim();
+    }
   }
 
   _parseExpression(

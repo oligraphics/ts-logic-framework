@@ -1,6 +1,21 @@
 import { OperationEnum } from '../enums/operation.enum.js';
 
 export const MathOperationService = new (class MathOperationService {
+  stringify(operation: OperationEnum): string {
+    switch (operation) {
+      case OperationEnum.ADD:
+        return '+';
+      case OperationEnum.SUBTRACT:
+        return '-';
+      case OperationEnum.MULTIPLY:
+        return '*';
+      case OperationEnum.DIVIDE:
+        return '/';
+      case OperationEnum.POW:
+        return '^';
+    }
+  }
+
   run(
     operation: OperationEnum,
     a: number,
