@@ -10,8 +10,11 @@ export declare const MathExpressionService: {
      * () and all multiplications are prioritized over divisions
      * @param input
      */
-    parse(input: string): MathExpressionDto | number | string;
+    parse(input: string): DynamicValue;
     stringify(input: DynamicValue, wrap?: boolean): string;
+    _resolve(input: unknown, placeholders: Map<string, DynamicValue>): DynamicValue;
+    _parseFunction(name: string, args: string[]): MathExpressionDto;
+    _parseOperator(a: string, operator: string, b: string): MathExpressionDto;
     _parseExpression(operation: OperationEnum, operator: string, parts: string[]): MathExpressionDto;
 };
 //# sourceMappingURL=math-expression.service.d.ts.map

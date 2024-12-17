@@ -5,6 +5,7 @@ import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
+import { randomBytes } from 'node:crypto';
 
 export const MathExpressionService = new (class MathExpressionService {
   _operators: Map<OperationEnum, string> = new Map([
@@ -42,17 +43,85 @@ export const MathExpressionService = new (class MathExpressionService {
    * () and all multiplications are prioritized over divisions
    * @param input
    */
-  parse(input: string): MathExpressionDto | number | string {
-    const trimmed = input.includes(' ') ? input.split(' ').join('') : input;
-    for (const [operation, operator] of this._operators.entries()) {
-      if (trimmed.includes(operator)) {
-        const parts = trimmed.split(operator);
-        return this._parseExpression(operation, operator, parts);
+  parse(input: string): DynamicValue {
+    const functionPattern = /([a-zA-Z_]+)\(([^()]*)\)/g;
+    const innerMostBracketsPattern = /\(([^()]*)\)/g;
+    const strokeOperatorsPattern = /(.+)([+\-])(.+)/g;
+    const dotOperatorsPattern = /(.+)([*\/])(.+)/g;
+    let current = input.includes(' ') ? input.split(' ').join('') : input;
+    const placeholders = new Map<string, DynamicValue>();
+    let functionMatch;
+    do {
+      functionMatch = functionPattern.exec(current);
+      if (functionMatch) {
+        console.log('Function match', functionMatch[0]);
+        const matchId = randomBytes(8).toString('hex');
+        current = current.replace(functionMatch[0], `{${matchId}}`);
+        placeholders.set(
+          `{${matchId}}`,
+          this._parseFunction(functionMatch[1], functionMatch[2].split(',')),
+        );
       }
-    }
-
-    const value = parseFloat(trimmed);
-    return !isNaN(value) ? value : trimmed;
+    } while (functionMatch);
+    let innerMostBracketsMatch;
+    do {
+      innerMostBracketsMatch = innerMostBracketsPattern.exec(current);
+      if (innerMostBracketsMatch) {
+        console.log('Bracket match', innerMostBracketsMatch[0]);
+        const matchId = randomBytes(8).toString('hex');
+        current = current.replace(innerMostBracketsMatch[0], `{${matchId}}`);
+        placeholders.set(`{${matchId}}`, this.parse(innerMostBracketsMatch[1]));
+      }
+    } while (innerMostBracketsMatch);
+    let strokeOperatorsMatch;
+    do {
+      strokeOperatorsMatch = strokeOperatorsPattern.exec(current);
+      if (strokeOperatorsMatch) {
+        console.log(
+          'Stroke operator match',
+          strokeOperatorsMatch[1],
+          strokeOperatorsMatch[2],
+          strokeOperatorsMatch[3],
+        );
+        const matchId = randomBytes(8).toString('hex');
+        current = current.replace(strokeOperatorsMatch[0], `{${matchId}}`);
+        placeholders.set(
+          `{${matchId}}`,
+          this._parseOperator(
+            strokeOperatorsMatch[1],
+            strokeOperatorsMatch[2],
+            strokeOperatorsMatch[3],
+          ),
+        );
+      }
+    } while (strokeOperatorsMatch);
+    let dotOperatorsMatch;
+    do {
+      dotOperatorsMatch = dotOperatorsPattern.exec(current);
+      if (dotOperatorsMatch) {
+        console.log(
+          'Dot operator match',
+          dotOperatorsMatch[1],
+          dotOperatorsMatch[2],
+          dotOperatorsMatch[3],
+        );
+        const matchId = randomBytes(8).toString('hex');
+        current = current.replace(dotOperatorsMatch[0], `{${matchId}}`);
+        placeholders.set(
+          `{${matchId}}`,
+          this._parseOperator(
+            dotOperatorsMatch[1],
+            dotOperatorsMatch[2],
+            dotOperatorsMatch[3],
+          ),
+        );
+      }
+    } while (dotOperatorsMatch);
+    return current.startsWith('{')
+      ? this._resolve(current, placeholders)
+      : current.match(/[0-9.-]+/g)
+      ? parseFloat(current)
+      : current;
   }
 
   stringify(input: DynamicValue, wrap?: boolean): string {
@@ -77,13 +146,69 @@ export const MathExpressionService = new (class MathExpressionService {
       const expression = input as MathExpressionDto;
       const a = this.stringify(expression.a, true);
       const b = this.stringify(expression.b, true);
-      const result = `${a} ${MathOperationService.stringify(
-        expression.operation,
-      )} ${b}`;
+      let result;
+      switch (expression.operation) {
+        case OperationEnum.POW:
+          return `pow(${a}, ${b})`;
+        default:
+          result = `${a} ${MathOperationService.stringify(
+            expression.operation,
+          )} ${b}`;
+          break;
+      }
       return wrap ? `(${result})` : result;
     } else {
       return (input?.toString() ?? '').trim();
     }
+  }
+
+  _resolve(
+    input: unknown,
+    placeholders: Map<string, DynamicValue>,
+  ): DynamicValue {
+    console.log('Resolve', input);
+    if (typeof input === 'string') {
+      console.log('Resolve as string');
+      return placeholders.has(input)
+        ? this._resolve(placeholders.get(input), placeholders)
+        : input;
+    }
+    if (Array.isArray(input)) {
+      console.log('Resolve as array');
+      return input.map((value) => this._resolve(value, placeholders));
+    }
+    if (typeof input === 'object') {
+      console.log('Resolve as expression');
+      const expression = input as MathExpressionDto;
+      return {
+        operation: expression.operation,
+        a: this._resolve(expression.a, placeholders),
+        b: this._resolve(expression.b, placeholders),
+      };
+    }
+    console.log('Resolve raw');
+    return input as DynamicValue;
+  }
+
+  _parseFunction(name: string, args: string[]): MathExpressionDto {
+    switch (name) {
+      case 'pow':
+        return {
+          operation: OperationEnum.POW,
+          a: args[0].startsWith('{') ? args[0] : this.parse(args[0]),
+          b: args[1].startsWith('{') ? args[1] : this.parse(args[1]),
+        };
+      default:
+        throw new Error('Unknown function name ' + name);
+    }
+  }
+
+  _parseOperator(a: string, operator: string, b: string): MathExpressionDto {
+    return {
+      operation: MathOperationService.parse(operator),
+      a: a.startsWith('{') ? a : this.parse(a),
+      b: b.startsWith('{') ? b : this.parse(b),
+    };
   }
 
   _parseExpression(

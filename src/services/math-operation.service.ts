@@ -1,6 +1,21 @@
 import { OperationEnum } from '../enums/operation.enum.js';
 
 export const MathOperationService = new (class MathOperationService {
+  parse(input: string): OperationEnum {
+    switch (input) {
+      case '+':
+        return OperationEnum.ADD;
+      case '-':
+        return OperationEnum.SUBTRACT;
+      case '*':
+        return OperationEnum.MULTIPLY;
+      case '/':
+        return OperationEnum.DIVIDE;
+      default:
+        throw new Error('Invalid operator ' + input);
+    }
+  }
+
   stringify(operation: OperationEnum): string {
     switch (operation) {
       case OperationEnum.ADD:
@@ -11,8 +26,10 @@ export const MathOperationService = new (class MathOperationService {
         return '*';
       case OperationEnum.DIVIDE:
         return '/';
-      case OperationEnum.POW:
-        return '^';
+      default:
+        throw new Error(
+          'Operator should be stringified as a function instead.',
+        );
     }
   }
 

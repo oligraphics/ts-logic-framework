@@ -14,3 +14,12 @@ const logic = input['logic'];
 
 const result = LogicService.resolve(logic, context);
 console.log('Result', result);
+
+// const testFormula = "(0.24 + {year}) * pow(0.0048, 2)";
+// const parsed =  MathExpressionService.parse(testFormula);
+// const stringified =  MathExpressionService.stringify(parsed);
+//
+// console.log(testFormula);
+// console.log(parsed);
+// console.log(stringified);
+// console.log(testFormula === stringified);
