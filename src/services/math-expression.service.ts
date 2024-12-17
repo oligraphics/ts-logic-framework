@@ -5,17 +5,9 @@ import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
-import { randomBytes } from 'node:crypto';
+import { IdService } from './id.service';
 
 export const MathExpressionService = new (class MathExpressionService {
-  _operators: Map<OperationEnum, string> = new Map([
-    [OperationEnum.ADD, '+'],
-    [OperationEnum.SUBTRACT, '-'],
-    [OperationEnum.MULTIPLY, '*'],
-    [OperationEnum.DIVIDE, '/'],
-    [OperationEnum.POW, '**'],
-  ]);
-
   resolve(
     expression: MathExpressionDto | number | string,
     context: DynamicContext,
@@ -54,8 +46,7 @@ export const MathExpressionService = new (class MathExpressionService {
     do {
       functionMatch = functionPattern.exec(current);
       if (functionMatch) {
-        console.log('Function match', functionMatch[0]);
-        const matchId = randomBytes(8).toString('hex');
+        const matchId = IdService.createRandomId();
         current = current.replace(functionMatch[0], `{${matchId}}`);
         placeholders.set(
           `{${matchId}}`,
@@ -67,8 +58,7 @@ export const MathExpressionService = new (class MathExpressionService {
     do {
       innerMostBracketsMatch = innerMostBracketsPattern.exec(current);
       if (innerMostBracketsMatch) {
-        console.log('Bracket match', innerMostBracketsMatch[0]);
-        const matchId = randomBytes(8).toString('hex');
+        const matchId = IdService.createRandomId();
         current = current.replace(innerMostBracketsMatch[0], `{${matchId}}`);
         placeholders.set(`{${matchId}}`, this.parse(innerMostBracketsMatch[1]));
       }
@@ -77,13 +67,7 @@ export const MathExpressionService = new (class MathExpressionService {
     do {
       strokeOperatorsMatch = strokeOperatorsPattern.exec(current);
       if (strokeOperatorsMatch) {
-        console.log(
-          'Stroke operator match',
-          strokeOperatorsMatch[1],
-          strokeOperatorsMatch[2],
-          strokeOperatorsMatch[3],
-        );
-        const matchId = randomBytes(8).toString('hex');
+        const matchId = IdService.createRandomId();
         current = current.replace(strokeOperatorsMatch[0], `{${matchId}}`);
         placeholders.set(
           `{${matchId}}`,
@@ -99,13 +83,7 @@ export const MathExpressionService = new (class MathExpressionService {
     do {
       dotOperatorsMatch = dotOperatorsPattern.exec(current);
       if (dotOperatorsMatch) {
-        console.log(
-          'Dot operator match',
-          dotOperatorsMatch[1],
-          dotOperatorsMatch[2],
-          dotOperatorsMatch[3],
-        );
-        const matchId = randomBytes(8).toString('hex');
+        const matchId = IdService.createRandomId();
         current = current.replace(dotOperatorsMatch[0], `{${matchId}}`);
         placeholders.set(
           `{${matchId}}`,
@@ -132,10 +110,6 @@ export const MathExpressionService = new (class MathExpressionService {
       }
       let result: string = stepsMap.get('result') ?? '';
       if (!result) {
-        console.log(
-          'Function did not provide a step that returns the result.',
-          JSON.stringify(input),
-        );
         return '';
       }
       for (const [key, value] of stepsMap) {
@@ -166,19 +140,15 @@ export const MathExpressionService = new (class MathExpressionService {
     input: unknown,
     placeholders: Map<string, DynamicValue>,
   ): DynamicValue {
-    console.log('Resolve', input);
     if (typeof input === 'string') {
-      console.log('Resolve as string');
       return placeholders.has(input)
         ? this._resolve(placeholders.get(input), placeholders)
         : input;
     }
     if (Array.isArray(input)) {
-      console.log('Resolve as array');
       return input.map((value) => this._resolve(value, placeholders));
     }
     if (typeof input === 'object') {
-      console.log('Resolve as expression');
       const expression = input as MathExpressionDto;
       return {
         operation: expression.operation,
@@ -186,7 +156,6 @@ export const MathExpressionService = new (class MathExpressionService {
         b: this._resolve(expression.b, placeholders),
       };
     }
-    console.log('Resolve raw');
     return input as DynamicValue;
   }
 
@@ -208,20 +177,6 @@ export const MathExpressionService = new (class MathExpressionService {
       operation: MathOperationService.parse(operator),
       a: a.startsWith('{') ? a : this.parse(a),
       b: b.startsWith('{') ? b : this.parse(b),
-    };
-  }
-
-  _parseExpression(
-    operation: OperationEnum,
-    operator: string,
-    parts: string[],
-  ): MathExpressionDto {
-    const a = parts[0];
-    const b = parts.slice(1).join(operator);
-    return {
-      operation: operation,
-      a: this.parse(a),
-      b: this.parse(b),
     };
   }
 })();
