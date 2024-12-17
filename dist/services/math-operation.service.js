@@ -3,6 +3,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MathOperationService = void 0;
 const operation_enum_js_1 = require("../enums/operation.enum.js");
 exports.MathOperationService = new (class MathOperationService {
+    stringify(operation) {
+        switch (operation) {
+            case operation_enum_js_1.OperationEnum.ADD:
+                return '+';
+            case operation_enum_js_1.OperationEnum.SUBTRACT:
+                return '-';
+            case operation_enum_js_1.OperationEnum.MULTIPLY:
+                return '*';
+            case operation_enum_js_1.OperationEnum.DIVIDE:
+                return '/';
+            case operation_enum_js_1.OperationEnum.POW:
+                return '^';
+        }
+    }
     run(operation, a, b, debug = false, debugLabel = undefined) {
         switch (operation) {
             case operation_enum_js_1.OperationEnum.ADD: {

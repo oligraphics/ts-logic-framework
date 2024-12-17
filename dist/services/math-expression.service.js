@@ -40,6 +40,33 @@ exports.MathExpressionService = new (class MathExpressionService {
         const value = parseFloat(trimmed);
         return !isNaN(value) ? value : trimmed;
     }
+    stringify(input, wrap) {
+        if (Array.isArray(input)) {
+            const stepsMap = new Map();
+            for (const step of input) {
+                stepsMap.set(step.result ?? 'result', this.stringify(step, true));
+            }
+            let result = stepsMap.get('result') ?? '';
+            if (!result) {
+                console.log('Function did not provide a step that returns the result.', JSON.stringify(input));
+                return '';
+            }
+            for (const [key, value] of stepsMap) {
+                result = result.replace(`#${key}`, value);
+            }
+            return result;
+        }
+        else if (typeof input === 'object') {
+            const expression = input;
+            const a = this.stringify(expression.a, true);
+            const b = this.stringify(expression.b, true);
+            const result = `${a} ${math_operation_service_js_1.MathOperationService.stringify(expression.operation)} ${b}`;
+            return wrap ? `(${result})` : result;
+        }
+        else {
+            return (input?.toString() ?? '').trim();
+        }
+    }
     _parseExpression(operation, operator, parts) {
         const a = parts[0];
         const b = parts.slice(1).join(operator);
