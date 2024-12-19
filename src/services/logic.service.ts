@@ -125,7 +125,7 @@ export const LogicService = new (class LogicService {
       }
       currentValue = currentValue[pathParts[i]];
     }
-    return this.resolve<T>(currentValue, context);
+    return this.resolve<T>(currentValue, context, debug);
   }
 
   resolveProperty<T>(
@@ -167,7 +167,7 @@ export const LogicService = new (class LogicService {
       }
       currentValue = currentValue[pathParts[i]];
     }
-    return this.resolve<T>(currentValue, context);
+    return this.resolve<T>(currentValue, context, debug);
   }
 
   createVariableMap(
