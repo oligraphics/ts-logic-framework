@@ -31,12 +31,12 @@ export const LogicService = new (class LogicService {
         if (debug) {
           console.log(value, 'is a variable reference');
         }
-        return this.resolveVariable<T>(value, context);
+        return this.resolveVariable<T>(value, context, debug);
       } else if (DynamicReferencePattern.property.test(value)) {
         if (debug) {
           console.log(value, 'is a property reference');
         }
-        return this.resolveProperty<T>(value, context);
+        return this.resolveProperty<T>(value, context, debug);
       } else {
         if (debug) {
           console.log(value, 'is a regular string');
@@ -89,8 +89,21 @@ export const LogicService = new (class LogicService {
     return value as T;
   }
 
-  resolveVariable<T>(name: string, context: DynamicContext): T {
+  resolveVariable<T>(
+    name: string,
+    context: DynamicContext,
+    debug?: boolean,
+  ): T {
+    if (!context) {
+      if (debug) {
+        console.error('Cannot look up', name, 'in undefined context.');
+      }
+      return undefined as T;
+    }
     const pathParts = name.split('.');
+    if (debug && !context?.hasOwnProperty(pathParts[0])) {
+      console.warn('Context does not contain a value for ', pathParts[0]);
+    }
     let currentValue = context[pathParts[0]] ?? undefined;
     for (let i = 1; i < pathParts.length; i++) {
       if (
@@ -102,13 +115,37 @@ export const LogicService = new (class LogicService {
       ) {
         return currentValue as T;
       }
+      if (debug && !currentValue.hasOwnProperty(pathParts[i])) {
+        console.warn(
+          'No value found for path part',
+          pathParts[i],
+          'in variable path',
+          name,
+        );
+      }
       currentValue = currentValue[pathParts[i]];
     }
-    return currentValue as T;
+    return this.resolve<T>(currentValue, context);
   }
 
-  resolveProperty<T>(name: string, context: DynamicContext): T {
+  resolveProperty<T>(
+    name: string,
+    context: DynamicContext,
+    debug?: boolean,
+  ): T {
+    if (!context) {
+      if (debug) {
+        console.error('Cannot look up', name, 'in undefined context.');
+      }
+      return undefined as T;
+    }
     const pathParts = name.substring(1, name.length - 1).split('.');
+    if (debug && !context?.hasOwnProperty(pathParts[0])) {
+      console.warn(
+        'Context does not contain a value for ',
+        `{${pathParts[0]}}`,
+      );
+    }
     let currentValue = context[`{${pathParts[0]}}`] ?? undefined;
     for (let i = 1; i < pathParts.length; i++) {
       if (
@@ -119,6 +156,14 @@ export const LogicService = new (class LogicService {
         currentValue === undefined
       ) {
         return currentValue as T;
+      }
+      if (debug && !currentValue.hasOwnProperty(pathParts[i])) {
+        console.warn(
+          'No value found for path part',
+          pathParts[i],
+          'in property path',
+          name,
+        );
       }
       currentValue = currentValue[pathParts[i]];
     }

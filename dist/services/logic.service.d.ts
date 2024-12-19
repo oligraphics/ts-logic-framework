@@ -3,8 +3,8 @@ import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
 export declare const LogicService: {
     resolve<T>(value: DynamicValue, context: DynamicContext, debug?: boolean): T;
-    resolveVariable<T>(name: string, context: DynamicContext): T;
-    resolveProperty<T>(name: string, context: DynamicContext): T;
+    resolveVariable<T>(name: string, context: DynamicContext, debug?: boolean): T;
+    resolveProperty<T>(name: string, context: DynamicContext, debug?: boolean): T;
     createVariableMap(variables: Map<string, any>, parentPath: string): Map<string, any>;
     /**
      * Replaces all occurrences of the provided variables with their value.
