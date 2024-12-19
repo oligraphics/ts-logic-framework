@@ -103,7 +103,7 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
-        return this.resolve(currentValue, context);
+        return this.resolve(currentValue, context, debug);
     }
     resolveProperty(name, context, debug) {
         if (!context) {
@@ -130,7 +130,7 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
-        return this.resolve(currentValue, context);
+        return this.resolve(currentValue, context, debug);
     }
     createVariableMap(variables, parentPath) {
         const result = new Map();
