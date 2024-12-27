@@ -1,6 +1,6 @@
 import { MathExpressionService } from '../../src';
 
-const testFormula = '0.24 + {year} * 0.0048';
+const testFormula = '0.24 - {year} * 0.0048';
 console.log('Original:', testFormula);
 
 const parsed = MathExpressionService.parse(testFormula);
