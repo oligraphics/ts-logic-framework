@@ -5,6 +5,7 @@ const math_operation_service_js_1 = require("./math-operation.service.js");
 const operation_enum_1 = require("../enums/operation.enum");
 const logic_service_1 = require("./logic.service");
 const id_service_1 = require("./id.service");
+const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
 exports.MathExpressionService = new (class MathExpressionService {
     resolve(expression, context) {
         if ('number' === typeof expression) {
@@ -66,17 +67,22 @@ exports.MathExpressionService = new (class MathExpressionService {
                 placeholders.set(`{${matchId}}`, this._parseOperator(dotOperatorsMatch[1], dotOperatorsMatch[2], dotOperatorsMatch[3]));
             }
         } while (dotOperatorsMatch);
-        return current.startsWith('{')
+        return current.startsWith('{') && current.endsWith('}')
             ? this._resolve(current, placeholders)
             : current.match(/[0-9.-]+/g)
                 ? parseFloat(current)
                 : current;
     }
+    /**
+     * Turn the expression into mathematical notation
+     * @param input The input expression
+     * @param wrap Whether to wrap the result in round brackets if it is an expression (default: <code>() => false</code>)
+     */
     stringify(input, wrap) {
         if (Array.isArray(input)) {
             const stepsMap = new Map();
             for (const step of input) {
-                stepsMap.set(step.result ?? 'result', this.stringify(step, true));
+                stepsMap.set(step.result ?? 'result', this.stringify(step, () => true));
             }
             let result = stepsMap.get('result') ?? '';
             if (!result) {
@@ -89,8 +95,9 @@ exports.MathExpressionService = new (class MathExpressionService {
         }
         else if (typeof input === 'object') {
             const expression = input;
-            const a = this.stringify(expression.a, true);
-            const b = this.stringify(expression.b, true);
+            const wrapTest = (v) => this.requireWrapping(expression.operation, v);
+            const a = this.stringify(expression.a, wrapTest);
+            const b = this.stringify(expression.b, wrapTest);
             let result;
             switch (expression.operation) {
                 case operation_enum_1.OperationEnum.POW:
@@ -99,11 +106,24 @@ exports.MathExpressionService = new (class MathExpressionService {
                     result = `${a} ${math_operation_service_js_1.MathOperationService.stringify(expression.operation)} ${b}`;
                     break;
             }
-            return wrap ? `(${result})` : result;
+            return wrap && wrap(expression) ? `(${result})` : result;
         }
         else {
             return (input?.toString() ?? '').trim();
         }
+    }
+    requireWrapping(outerOperation, value) {
+        const innerOperation = value?.operation;
+        if (!innerOperation) {
+            return false;
+        }
+        const outerWeight = math_operation_service_js_1.MathOperationService.getWeight(outerOperation);
+        const innerWeight = math_operation_service_js_1.MathOperationService.getWeight(innerOperation);
+        if (innerWeight < outerWeight) {
+            return true;
+        }
+        return (outerOperation !== operation_enum_1.OperationEnum.ADD &&
+            outerOperation !== operation_enum_1.OperationEnum.MULTIPLY);
     }
     _resolve(input, placeholders) {
         if (typeof input === 'string') {
@@ -139,8 +159,8 @@ exports.MathExpressionService = new (class MathExpressionService {
     _parseOperator(a, operator, b) {
         return {
             operation: math_operation_service_js_1.MathOperationService.parse(operator),
-            a: a.startsWith('{') ? a : this.parse(a),
-            b: b.startsWith('{') ? b : this.parse(b),
+            a: dynamic_reference_pattern_1.DynamicReferencePattern.property.test(a) ? a : this.parse(a),
+            b: dynamic_reference_pattern_1.DynamicReferencePattern.property.test(b) ? b : this.parse(b),
         };
     }
 })();

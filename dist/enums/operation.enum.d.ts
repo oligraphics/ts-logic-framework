@@ -3,6 +3,8 @@ export declare enum OperationEnum {
     SUBTRACT = "subtract",
     MULTIPLY = "multiply",
     DIVIDE = "divide",
-    POW = "pow"
+    POW = "pow",
+    SQRT = "sqrt",
+    MOD = "mod"
 }
 //# sourceMappingURL=operation.enum.d.ts.map
