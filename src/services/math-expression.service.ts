@@ -130,10 +130,12 @@ export const MathExpressionService = new (class MathExpressionService {
       return result;
     } else if (typeof input === 'object') {
       const expression = input as MathExpressionDto;
-      const wrapTest = (v: DynamicValue) =>
-        this.requireWrapping(expression.operation, v);
-      const a = this.stringify(expression.a, wrapTest);
-      const b = this.stringify(expression.b, wrapTest);
+      const a = this.stringify(expression.a, (v: DynamicValue) =>
+        this.requireWrapping(expression.operation, v, false),
+      );
+      const b = this.stringify(expression.b, (v: DynamicValue) =>
+        this.requireWrapping(expression.operation, v, true),
+      );
       let result;
       switch (expression.operation) {
         case OperationEnum.POW:
@@ -150,17 +152,33 @@ export const MathExpressionService = new (class MathExpressionService {
     }
   }
 
-  requireWrapping(outerOperation: OperationEnum, value: DynamicValue): boolean {
+  requireWrapping(
+    outerOperation: OperationEnum,
+    value: DynamicValue,
+    isRightSide: boolean,
+  ): boolean {
     const innerOperation = (value as MathExpressionDto)?.operation;
     if (!innerOperation) {
       return false;
     }
     const outerWeight = MathOperationService.getWeight(outerOperation);
     const innerWeight = MathOperationService.getWeight(innerOperation);
+    console.log(
+      outerOperation,
+      outerWeight,
+      innerOperation,
+      innerWeight,
+      'is right side',
+      isRightSide,
+    );
+    if (innerWeight > outerWeight) {
+      return false;
+    }
     if (innerWeight < outerWeight) {
       return true;
     }
     return (
+      isRightSide &&
       outerOperation !== OperationEnum.ADD &&
       outerOperation !== OperationEnum.MULTIPLY
     );

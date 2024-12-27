@@ -16,7 +16,7 @@ export declare const MathExpressionService: {
      * @param wrap Whether to wrap the result in round brackets if it is an expression (default: <code>() => false</code>)
      */
     stringify(input: DynamicValue, wrap?: (value: DynamicValue) => boolean): string;
-    requireWrapping(outerOperation: OperationEnum, value: DynamicValue): boolean;
+    requireWrapping(outerOperation: OperationEnum, value: DynamicValue, isRightSide: boolean): boolean;
     _resolve(input: unknown, placeholders: Map<string, DynamicValue>): DynamicValue;
     _parseFunction(name: string, args: string[]): MathExpressionDto;
     _parseOperator(a: string, operator: string, b: string): MathExpressionDto;

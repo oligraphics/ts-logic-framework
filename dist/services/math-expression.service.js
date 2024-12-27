@@ -95,9 +95,8 @@ exports.MathExpressionService = new (class MathExpressionService {
         }
         else if (typeof input === 'object') {
             const expression = input;
-            const wrapTest = (v) => this.requireWrapping(expression.operation, v);
-            const a = this.stringify(expression.a, wrapTest);
-            const b = this.stringify(expression.b, wrapTest);
+            const a = this.stringify(expression.a, (v) => this.requireWrapping(expression.operation, v, false));
+            const b = this.stringify(expression.b, (v) => this.requireWrapping(expression.operation, v, true));
             let result;
             switch (expression.operation) {
                 case operation_enum_1.OperationEnum.POW:
@@ -112,17 +111,22 @@ exports.MathExpressionService = new (class MathExpressionService {
             return (input?.toString() ?? '').trim();
         }
     }
-    requireWrapping(outerOperation, value) {
+    requireWrapping(outerOperation, value, isRightSide) {
         const innerOperation = value?.operation;
         if (!innerOperation) {
             return false;
         }
         const outerWeight = math_operation_service_js_1.MathOperationService.getWeight(outerOperation);
         const innerWeight = math_operation_service_js_1.MathOperationService.getWeight(innerOperation);
+        console.log(outerOperation, outerWeight, innerOperation, innerWeight, 'is right side', isRightSide);
+        if (innerWeight > outerWeight) {
+            return false;
+        }
         if (innerWeight < outerWeight) {
             return true;
         }
-        return (outerOperation !== operation_enum_1.OperationEnum.ADD &&
+        return (isRightSide &&
+            outerOperation !== operation_enum_1.OperationEnum.ADD &&
             outerOperation !== operation_enum_1.OperationEnum.MULTIPLY);
     }
     _resolve(input, placeholders) {
