@@ -163,14 +163,14 @@ export const MathExpressionService = new (class MathExpressionService {
     }
     const outerWeight = MathOperationService.getWeight(outerOperation);
     const innerWeight = MathOperationService.getWeight(innerOperation);
-    console.log(
-      outerOperation,
-      outerWeight,
-      innerOperation,
-      innerWeight,
-      'is right side',
-      isRightSide,
-    );
+    // console.log(
+    //   outerOperation,
+    //   outerWeight,
+    //   innerOperation,
+    //   innerWeight,
+    //   'is right side',
+    //   isRightSide,
+    // );
     if (innerWeight > outerWeight) {
       return false;
     }

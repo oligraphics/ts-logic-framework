@@ -118,7 +118,14 @@ exports.MathExpressionService = new (class MathExpressionService {
         }
         const outerWeight = math_operation_service_js_1.MathOperationService.getWeight(outerOperation);
         const innerWeight = math_operation_service_js_1.MathOperationService.getWeight(innerOperation);
-        console.log(outerOperation, outerWeight, innerOperation, innerWeight, 'is right side', isRightSide);
+        // console.log(
+        //   outerOperation,
+        //   outerWeight,
+        //   innerOperation,
+        //   innerWeight,
+        //   'is right side',
+        //   isRightSide,
+        // );
         if (innerWeight > outerWeight) {
             return false;
         }
