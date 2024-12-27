@@ -4,4 +4,6 @@ export enum OperationEnum {
   MULTIPLY = 'multiply',
   DIVIDE = 'divide',
   POW = 'pow',
+  SQRT = 'sqrt',
+  MOD = 'mod',
 }

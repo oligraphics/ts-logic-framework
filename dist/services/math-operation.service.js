@@ -3,6 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MathOperationService = void 0;
 const operation_enum_js_1 = require("../enums/operation.enum.js");
 exports.MathOperationService = new (class MathOperationService {
+    getWeight(operation) {
+        switch (operation) {
+            case operation_enum_js_1.OperationEnum.POW:
+            case operation_enum_js_1.OperationEnum.SQRT:
+            case operation_enum_js_1.OperationEnum.MOD:
+                return 3;
+            case operation_enum_js_1.OperationEnum.MULTIPLY:
+            case operation_enum_js_1.OperationEnum.DIVIDE:
+                return 2;
+            case operation_enum_js_1.OperationEnum.ADD:
+            case operation_enum_js_1.OperationEnum.SUBTRACT:
+                return 1;
+            default:
+                return 0;
+        }
+    }
     parse(input) {
         switch (input) {
             case '+':
@@ -13,6 +29,10 @@ exports.MathOperationService = new (class MathOperationService {
                 return operation_enum_js_1.OperationEnum.MULTIPLY;
             case '/':
                 return operation_enum_js_1.OperationEnum.DIVIDE;
+            case '**':
+                return operation_enum_js_1.OperationEnum.POW;
+            case '%':
+                return operation_enum_js_1.OperationEnum.MOD;
             default:
                 throw new Error('Invalid operator ' + input);
         }
@@ -27,6 +47,10 @@ exports.MathOperationService = new (class MathOperationService {
                 return '*';
             case operation_enum_js_1.OperationEnum.DIVIDE:
                 return '/';
+            case operation_enum_js_1.OperationEnum.POW:
+                return '**';
+            case operation_enum_js_1.OperationEnum.MOD:
+                return '%';
             default:
                 throw new Error('Operator should be stringified as a function instead.');
         }
@@ -56,6 +80,18 @@ exports.MathOperationService = new (class MathOperationService {
                     console.log(debugLabel, a, '^', b, '=', Math.pow(a, b));
                 }
                 return a ** b;
+            }
+            case operation_enum_js_1.OperationEnum.SQRT: {
+                if (debug) {
+                    console.log(debugLabel, `sqrt(${a})`, '=', Math.pow(a, b));
+                }
+                return Math.sqrt(a);
+            }
+            case operation_enum_js_1.OperationEnum.MOD: {
+                if (debug) {
+                    console.log(debugLabel, a, '%', b, '=', a - b);
+                }
+                return a % b;
             }
             case operation_enum_js_1.OperationEnum.SUBTRACT: {
                 if (debug) {

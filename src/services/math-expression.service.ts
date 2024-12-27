@@ -6,6 +6,7 @@ import { LogicService } from './logic.service';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
 import { IdService } from './id.service';
+import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
 
 export const MathExpressionService = new (class MathExpressionService {
   resolve(
@@ -95,18 +96,29 @@ export const MathExpressionService = new (class MathExpressionService {
         );
       }
     } while (dotOperatorsMatch);
-    return current.startsWith('{')
+    return current.startsWith('{') && current.endsWith('}')
       ? this._resolve(current, placeholders)
       : current.match(/[0-9.-]+/g)
       ? parseFloat(current)
       : current;
   }
 
-  stringify(input: DynamicValue, wrap?: boolean): string {
+  /**
+   * Turn the expression into mathematical notation
+   * @param input The input expression
+   * @param wrap Whether to wrap the result in round brackets if it is an expression (default: <code>() => false</code>)
+   */
+  stringify(
+    input: DynamicValue,
+    wrap?: (value: DynamicValue) => boolean,
+  ): string {
     if (Array.isArray(input)) {
       const stepsMap = new Map<string, string>();
       for (const step of input) {
-        stepsMap.set(step.result ?? 'result', this.stringify(step, true));
+        stepsMap.set(
+          step.result ?? 'result',
+          this.stringify(step, () => true),
+        );
       }
       let result: string = stepsMap.get('result') ?? '';
       if (!result) {
@@ -118,8 +130,10 @@ export const MathExpressionService = new (class MathExpressionService {
       return result;
     } else if (typeof input === 'object') {
       const expression = input as MathExpressionDto;
-      const a = this.stringify(expression.a, true);
-      const b = this.stringify(expression.b, true);
+      const wrapTest = (v: DynamicValue) =>
+        this.requireWrapping(expression.operation, v);
+      const a = this.stringify(expression.a, wrapTest);
+      const b = this.stringify(expression.b, wrapTest);
       let result;
       switch (expression.operation) {
         case OperationEnum.POW:
@@ -130,10 +144,26 @@ export const MathExpressionService = new (class MathExpressionService {
           )} ${b}`;
           break;
       }
-      return wrap ? `(${result})` : result;
+      return wrap && wrap(expression) ? `(${result})` : result;
     } else {
       return (input?.toString() ?? '').trim();
     }
+  }
+
+  requireWrapping(outerOperation: OperationEnum, value: DynamicValue): boolean {
+    const innerOperation = (value as MathExpressionDto)?.operation;
+    if (!innerOperation) {
+      return false;
+    }
+    const outerWeight = MathOperationService.getWeight(outerOperation);
+    const innerWeight = MathOperationService.getWeight(innerOperation);
+    if (innerWeight < outerWeight) {
+      return true;
+    }
+    return (
+      outerOperation !== OperationEnum.ADD &&
+      outerOperation !== OperationEnum.MULTIPLY
+    );
   }
 
   _resolve(
@@ -175,8 +205,8 @@ export const MathExpressionService = new (class MathExpressionService {
   _parseOperator(a: string, operator: string, b: string): MathExpressionDto {
     return {
       operation: MathOperationService.parse(operator),
-      a: a.startsWith('{') ? a : this.parse(a),
-      b: b.startsWith('{') ? b : this.parse(b),
+      a: DynamicReferencePattern.property.test(a) ? a : this.parse(a),
+      b: DynamicReferencePattern.property.test(b) ? b : this.parse(b),
     };
   }
 })();

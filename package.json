@@ -10,7 +10,8 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "test": "tsx test/src/test.ts",
+    "test:logic": "tsx test/src/logic.ts",
+    "test:parser": "tsx test/src/parser.ts",
     "lint": "eslint src/**/* --fix --ignore-pattern '!**/.gitignore'"
   },
   "repository": {

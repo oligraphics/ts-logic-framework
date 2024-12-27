@@ -8,5 +8,7 @@ var OperationEnum;
     OperationEnum["MULTIPLY"] = "multiply";
     OperationEnum["DIVIDE"] = "divide";
     OperationEnum["POW"] = "pow";
+    OperationEnum["SQRT"] = "sqrt";
+    OperationEnum["MOD"] = "mod";
 })(OperationEnum || (exports.OperationEnum = OperationEnum = {}));
 //# sourceMappingURL=operation.enum.js.map
