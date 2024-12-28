@@ -1,4 +1,7 @@
-export const StringUtilityService = new (class StringUtilityService {
+export const StringService = new (class {
+  toSnake(value: string): string {
+    return value.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+  }
   toLowerCaseUnderscore(value: string) {
     return value
       .split(' ')

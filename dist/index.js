@@ -42,5 +42,6 @@ __exportStar(require("./services/logic.service"), exports);
 __exportStar(require("./services/logic-gate.service"), exports);
 __exportStar(require("./services/math-expression.service"), exports);
 __exportStar(require("./services/math-operation.service"), exports);
-__exportStar(require("./services/string-utility.service"), exports);
+__exportStar(require("./services/number-formatter.service"), exports);
+__exportStar(require("./services/string.service"), exports);
 //# sourceMappingURL=index.js.map
