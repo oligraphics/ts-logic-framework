@@ -26,5 +26,6 @@ export * from './services/logic.service';
 export * from './services/logic-gate.service';
 export * from './services/math-expression.service';
 export * from './services/math-operation.service';
-export * from './services/string-utility.service';
+export * from './services/number-formatter.service';
+export * from './services/string.service';
 //# sourceMappingURL=index.d.ts.map
