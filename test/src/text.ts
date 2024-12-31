@@ -12,5 +12,5 @@ const context: DynamicContext = DynamicContextService.createContext(
 );
 const test = input['test'];
 
-const result = LogicService.resolve(test, context);
+const result = LogicService.resolve(test, context, true);
 console.log('Result:', result);

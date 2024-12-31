@@ -7,17 +7,17 @@ const logic_service_1 = require("./logic.service");
 const id_service_1 = require("./id.service");
 const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
 exports.MathExpressionService = new (class MathExpressionService {
-    resolve(expression, context) {
+    resolve(expression, context, debug) {
         if ('number' === typeof expression) {
             return expression;
         }
         if ('string' === typeof expression) {
             return context[expression] ?? 0;
         }
-        const a = logic_service_1.LogicService.resolve(expression.a, context);
-        const b = logic_service_1.LogicService.resolve(expression.b, context);
+        const a = logic_service_1.LogicService.resolve(expression.a, context, debug);
+        const b = logic_service_1.LogicService.resolve(expression.b, context, debug);
         const result = expression?.result;
-        return math_operation_service_js_1.MathOperationService.run(expression.operation, a, b, expression.debug, expression.debugLabel ?? `#${result ?? 'value'}`);
+        return math_operation_service_js_1.MathOperationService.run(expression.operation, a, b, expression.debug || debug, expression.debugLabel ?? `#${result ?? 'value'}`);
     }
     /**
      * Parses an expression naively. Important: This does not support nesting with
@@ -118,7 +118,7 @@ exports.MathExpressionService = new (class MathExpressionService {
         }
         const outerWeight = math_operation_service_js_1.MathOperationService.getWeight(outerOperation);
         const innerWeight = math_operation_service_js_1.MathOperationService.getWeight(innerOperation);
-        // console.log(
+        // console.debug(
         //   outerOperation,
         //   outerWeight,
         //   innerOperation,

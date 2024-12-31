@@ -59,43 +59,43 @@ exports.MathOperationService = new (class MathOperationService {
         switch (operation) {
             case operation_enum_js_1.OperationEnum.ADD: {
                 if (debug) {
-                    console.log(debugLabel, a, '+', b, '=', a + b);
+                    console.debug(debugLabel, a, '+', b, '=', a + b);
                 }
                 return a + b;
             }
             case operation_enum_js_1.OperationEnum.DIVIDE: {
                 if (debug) {
-                    console.log(debugLabel, a, '/', b, '=', a / b);
+                    console.debug(debugLabel, a, '/', b, '=', a / b);
                 }
                 return a / b;
             }
             case operation_enum_js_1.OperationEnum.MULTIPLY: {
                 if (debug) {
-                    console.log(debugLabel, a, '*', b, '=', a * b);
+                    console.debug(debugLabel, a, '*', b, '=', a * b);
                 }
                 return a * b;
             }
             case operation_enum_js_1.OperationEnum.POW: {
                 if (debug) {
-                    console.log(debugLabel, a, '^', b, '=', Math.pow(a, b));
+                    console.debug(debugLabel, a, '^', b, '=', Math.pow(a, b));
                 }
                 return a ** b;
             }
             case operation_enum_js_1.OperationEnum.SQRT: {
                 if (debug) {
-                    console.log(debugLabel, `sqrt(${a})`, '=', Math.pow(a, b));
+                    console.debug(debugLabel, `sqrt(${a})`, '=', Math.pow(a, b));
                 }
                 return Math.sqrt(a);
             }
             case operation_enum_js_1.OperationEnum.MOD: {
                 if (debug) {
-                    console.log(debugLabel, a, '%', b, '=', a - b);
+                    console.debug(debugLabel, a, '%', b, '=', a - b);
                 }
                 return a % b;
             }
             case operation_enum_js_1.OperationEnum.SUBTRACT: {
                 if (debug) {
-                    console.log(debugLabel, a, '-', b, '=', a - b);
+                    console.debug(debugLabel, a, '-', b, '=', a - b);
                 }
                 return a - b;
             }

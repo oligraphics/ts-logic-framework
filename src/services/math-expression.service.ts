@@ -12,6 +12,7 @@ export const MathExpressionService = new (class MathExpressionService {
   resolve(
     expression: MathExpressionDto | number | string,
     context: DynamicContext,
+    debug?: boolean,
   ): number {
     if ('number' === typeof expression) {
       return expression;
@@ -19,14 +20,14 @@ export const MathExpressionService = new (class MathExpressionService {
     if ('string' === typeof expression) {
       return context[expression] ?? 0;
     }
-    const a = LogicService.resolve<number>(expression.a, context);
-    const b = LogicService.resolve<number>(expression.b, context);
+    const a = LogicService.resolve<number>(expression.a, context, debug);
+    const b = LogicService.resolve<number>(expression.b, context, debug);
     const result = (expression as MathExpressionStepDto)?.result;
     return MathOperationService.run(
       expression.operation,
       a,
       b,
-      expression.debug,
+      expression.debug || debug,
       expression.debugLabel ?? `#${result ?? 'value'}`,
     );
   }
@@ -163,7 +164,7 @@ export const MathExpressionService = new (class MathExpressionService {
     }
     const outerWeight = MathOperationService.getWeight(outerOperation);
     const innerWeight = MathOperationService.getWeight(innerOperation);
-    // console.log(
+    // console.debug(
     //   outerOperation,
     //   outerWeight,
     //   innerOperation,

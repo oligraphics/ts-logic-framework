@@ -28,13 +28,14 @@ export const ConditionService = new (class ConditionService {
   testCondition(
     condition: Condition,
     context: DynamicContext,
+    debug?: boolean,
   ): true | Condition {
     if (typeof condition === 'string') {
-      const parsed = LogicService.resolve(condition, context);
+      const parsed = LogicService.resolve(condition, context, debug);
       if (typeof parsed === 'string' && parsed === condition) {
         return parsed;
       }
-      return this.testCondition(parsed as Condition, context);
+      return this.testCondition(parsed as Condition, context, debug);
     }
 
     if (typeof condition === 'boolean') {
@@ -56,10 +57,14 @@ export const ConditionService = new (class ConditionService {
     }
 
     if (this.comparisons.includes(logic.type)) {
-      return this.testComparison(condition, context);
+      return this.testComparison(condition, context, debug);
     }
 
-    const logicGateResult = LogicGateService.test(<LogicGateDto>logic, context);
+    const logicGateResult = LogicGateService.test(
+      <LogicGateDto>logic,
+      context,
+      debug,
+    );
     if (logic.invert) {
       return logicGateResult === true ? logicGateResult : true;
     } else {
@@ -70,30 +75,32 @@ export const ConditionService = new (class ConditionService {
   testComparison(
     logic: ConditionDto,
     context: DynamicContext,
+    debug?: boolean,
   ): true | Condition {
     const invert = logic.invert === true;
-    const debugLabel = logic.debug
-      ? (logic.debugLabel ?? 'Test') + (invert ? ' (invert)' : '')
-      : undefined;
+    const debugLabel =
+      logic.debug || debug
+        ? (logic.debugLabel ?? 'Test') + (invert ? ' (invert)' : '')
+        : undefined;
     switch (logic.type) {
       case BooleanLogicTypeEnum.EQUAL: {
         const valueLogic = logic as EqualConditionDto;
         const value = LogicService.resolve(
           valueLogic.value,
           context,
-          logic.debug,
+          logic.debug || debug,
         );
         const equals = LogicService.resolve(
           valueLogic.equals,
           context,
-          logic.debug,
+          logic.debug || debug,
         );
         const result = EqualityService.test(value, equals);
-        if (logic.debug) {
-          console.log(
+        if (logic.debug || debug) {
+          console.debug(
             debugLabel,
             JSON.stringify(value),
-            Array.isArray(equals) ? 'in' : '=',
+            Array.isArray(equals) ? 'in' : '==',
             JSON.stringify(equals),
             '=',
             result,
@@ -106,16 +113,16 @@ export const ConditionService = new (class ConditionService {
         const input = LogicService.resolve(
           valueLogic.value,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const value = LogicService.resolve(
           valueLogic.greaterThan,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const result = input > value;
-        if (logic.debug) {
-          console.log(
+        if (logic.debug || debug) {
+          console.debug(
             debugLabel,
             JSON.stringify(input),
             '>',
@@ -131,16 +138,16 @@ export const ConditionService = new (class ConditionService {
         const input = LogicService.resolve(
           valueLogic.value,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const value = LogicService.resolve(
           valueLogic.greaterThanOrEqual,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const result = input >= value;
-        if (logic.debug) {
-          console.log(
+        if (logic.debug || debug) {
+          console.debug(
             debugLabel,
             JSON.stringify(input),
             '>=',
@@ -156,16 +163,16 @@ export const ConditionService = new (class ConditionService {
         const input = LogicService.resolve(
           valueLogic.value,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const value = LogicService.resolve(
           valueLogic.lessThanOrEqual,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const result = input <= value;
-        if (logic.debug) {
-          console.log(
+        if (logic.debug || debug) {
+          console.debug(
             debugLabel,
             JSON.stringify(input),
             '<=',
@@ -181,16 +188,16 @@ export const ConditionService = new (class ConditionService {
         const input = LogicService.resolve(
           valueLogic.value,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const value = LogicService.resolve(
           valueLogic.lessThan,
           context,
-          logic.debug,
+          logic.debug || debug,
         ) as number;
         const result = input < value;
-        if (logic.debug) {
-          console.log(
+        if (logic.debug || debug) {
+          console.debug(
             debugLabel,
             JSON.stringify(input),
             '<',

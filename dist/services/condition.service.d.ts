@@ -8,7 +8,7 @@ export declare const ConditionService: {
      * @returns <code>true</code> if the result of the test is true, otherwise
      * returns the condition that failed.
      */
-    testCondition(condition: Condition, context: DynamicContext): true | Condition;
-    testComparison(logic: ConditionDto, context: DynamicContext): true | Condition;
+    testCondition(condition: Condition, context: DynamicContext, debug?: boolean): true | Condition;
+    testComparison(logic: ConditionDto, context: DynamicContext, debug?: boolean): true | Condition;
 };
 //# sourceMappingURL=condition.service.d.ts.map

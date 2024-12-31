@@ -3,7 +3,7 @@ import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
 import { LogicService } from './logic.service';
 
 export const StringService = new (class {
-  applyTextVariables(text: string, context: DynamicContext) {
+  applyTextVariables(text: string, context: DynamicContext, debug?: boolean) {
     let currentText = text;
     let previousPropertyMatch = undefined;
     let propertyMatch;
@@ -11,7 +11,9 @@ export const StringService = new (class {
       propertyMatch =
         DynamicReferencePattern.propertyFragment.exec(currentText);
       if (propertyMatch) {
-        console.log('Property match:', propertyMatch[0]);
+        if (debug) {
+          console.debug('Property match:', propertyMatch[0]);
+        }
         if (
           propertyMatch.index === previousPropertyMatch?.index &&
           propertyMatch[0] === previousPropertyMatch[0]
@@ -21,7 +23,7 @@ export const StringService = new (class {
         }
         currentText = currentText.replace(
           propertyMatch[0],
-          LogicService.resolveProperty(propertyMatch[0], context),
+          LogicService.resolveProperty(propertyMatch[0], context, debug),
         );
       }
       previousPropertyMatch = propertyMatch;
@@ -32,7 +34,9 @@ export const StringService = new (class {
       variableMatch =
         DynamicReferencePattern.variableFragment.exec(currentText);
       if (variableMatch) {
-        console.log('Variable match: ', variableMatch[0]);
+        if (debug) {
+          console.debug('Variable match: ', variableMatch[0]);
+        }
         if (
           variableMatch.index === previousVariableMatch?.index &&
           variableMatch[0] === previousVariableMatch[0]
@@ -42,7 +46,7 @@ export const StringService = new (class {
         }
         currentText = currentText.replace(
           variableMatch[0],
-          LogicService.resolveProperty(variableMatch[0], context),
+          LogicService.resolveVariable(variableMatch[0], context, debug),
         );
       }
       previousVariableMatch = variableMatch;

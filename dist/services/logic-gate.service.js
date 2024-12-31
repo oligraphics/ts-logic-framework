@@ -4,10 +4,10 @@ exports.LogicGateService = void 0;
 const boolean_logic_type_enum_1 = require("../enums/boolean-logic-type.enum");
 const condition_service_1 = require("./condition.service");
 exports.LogicGateService = new (class LogicGateService {
-    test(logicGate, context) {
+    test(logicGate, context, debug) {
         const debugLabel = logicGate.debugLabel ?? 'Condition';
-        if (logicGate.debug) {
-            console.log(debugLabel, 'Test', logicGate);
+        if (logicGate.debug || debug) {
+            console.debug(debugLabel, 'Test', logicGate);
         }
         /**
          * @var conditions Array of key value pairs where the key is the condition
@@ -16,79 +16,79 @@ exports.LogicGateService = new (class LogicGateService {
          */
         const conditions = logicGate.conditions.map((condition) => [
             condition,
-            condition_service_1.ConditionService.testCondition(condition, context),
+            condition_service_1.ConditionService.testCondition(condition, context, debug),
         ]);
-        if (logicGate.debug) {
-            console.log(debugLabel, 'Values', conditions);
+        if (logicGate.debug || debug) {
+            console.debug(debugLabel, 'Values', conditions);
         }
         switch (logicGate.type) {
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.AND: {
-                return this._testAnd(logicGate, conditions);
+                return this._testAnd(logicGate, conditions, debug);
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.OR: {
-                return this._testOr(logicGate, conditions);
+                return this._testOr(logicGate, conditions, debug);
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NAND: {
-                return this._testNAnd(logicGate, conditions);
+                return this._testNAnd(logicGate, conditions, debug);
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.NOR: {
-                return this._testNor(logicGate, conditions);
+                return this._testNor(logicGate, conditions, debug);
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.XOR: {
-                return this._testXOr(logicGate, conditions);
+                return this._testXOr(logicGate, conditions, debug);
             }
             default:
-                if (logicGate.debug) {
+                if (logicGate.debug || debug) {
                     console.log(debugLabel, 'Logic gate type not implemented', logicGate.type);
                 }
                 return logicGate;
         }
     }
-    _testAnd(condition, conditions) {
+    _testAnd(condition, conditions, debug) {
         const debugLabel = condition.debugLabel ?? 'Condition';
         const firstFalse = conditions.find((c) => c[1] !== true);
-        if (condition.debug) {
-            console.log(debugLabel, 'First false', firstFalse);
+        if (condition.debug || debug) {
+            console.debug(debugLabel, 'First false', firstFalse);
         }
         return firstFalse == null ? true : firstFalse[1];
     }
-    _testNAnd(condition, conditions) {
+    _testNAnd(condition, conditions, debug) {
         const debugLabel = condition.debugLabel ?? 'Condition';
         const firstFalse = conditions.find((c) => c[1] !== true);
-        if (condition.debug) {
-            console.log(debugLabel, 'First false', firstFalse);
+        if (condition.debug || debug) {
+            console.debug(debugLabel, 'First false', firstFalse);
         }
         return firstFalse != null ? true : condition;
     }
-    _testNor(condition, conditions) {
+    _testNor(condition, conditions, debug) {
         const debugLabel = condition.debugLabel ?? 'Condition';
         const firstTrue = conditions.find((c) => c[1] === true);
-        if (condition.debug) {
-            console.log(debugLabel, 'First true', firstTrue);
+        if (condition.debug || debug) {
+            console.debug(debugLabel, 'First true', firstTrue);
         }
         return firstTrue == null ? true : firstTrue[0];
     }
-    _testOr(condition, conditions) {
+    _testOr(condition, conditions, debug) {
         const debugLabel = condition.debugLabel ?? 'Condition';
         const firstTrue = conditions.find((c) => c[1] === true);
-        if (condition.debug) {
-            console.log(debugLabel, 'First true', firstTrue);
+        if (condition.debug || debug) {
+            console.debug(debugLabel, 'First true', firstTrue);
         }
         return firstTrue != null ? true : condition;
     }
-    _testXOr(condition, conditions) {
+    _testXOr(condition, conditions, debug) {
         const debugLabel = condition.debugLabel ?? 'Condition';
         if (conditions.length === 0) {
-            if (condition.debug) {
-                console.log(debugLabel, 'No conditions', condition);
+            if (condition.debug || debug) {
+                console.debug(debugLabel, 'No conditions', condition);
             }
             return condition;
         }
         const trueConditions = conditions.filter((c) => c[1] === true);
         const falseConditions = conditions.filter((c) => c[1] !== true);
         const lengthsMatch = trueConditions.length === falseConditions.length;
-        if (condition.debug) {
-            console.log(debugLabel, 'True/False counts match:', lengthsMatch);
+        if (condition.debug || debug) {
+            console.debug(debugLabel, 'True/False counts match:', lengthsMatch);
         }
         return lengthsMatch ? true : condition;
     }
