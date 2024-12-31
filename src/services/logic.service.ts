@@ -8,6 +8,7 @@ import { MathExpressionDto } from '../dto/expressions/math-expression.dto';
 import { MathExpressionService } from './math-expression.service';
 import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto';
 import { ConditionalValuesService } from './conditional-values.service';
+import { StringService } from './string.service';
 
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
@@ -41,7 +42,7 @@ export const LogicService = new (class LogicService {
         if (debug) {
           console.log(value, 'is a regular string');
         }
-        return value as T;
+        return StringService.applyTextVariables(value, context) as T;
       }
     }
 

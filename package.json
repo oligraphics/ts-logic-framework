@@ -12,6 +12,7 @@
   "scripts": {
     "test:logic": "tsx test/src/logic.ts",
     "test:parser": "tsx test/src/parser.ts",
+    "test:text": "tsx test/src/text.ts",
     "lint": "eslint src/**/* --fix --ignore-pattern '!**/.gitignore'"
   },
   "repository": {

@@ -1,0 +1,15 @@
+{
+  "props": {
+    "amount": 5,
+    "text": {
+      "if": {
+        "type": "equal",
+        "value": "{amount}",
+        "equals": 5
+      },
+      "true": "Amount {amount} == 5",
+      "false": "Amount {amount} != 5"
+    }
+  },
+  "test": "{text}"
+}
