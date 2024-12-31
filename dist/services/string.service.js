@@ -1,7 +1,45 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StringService = void 0;
+const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
+const logic_service_1 = require("./logic.service");
 exports.StringService = new (class {
+    applyTextVariables(text, context) {
+        let currentText = text;
+        let previousPropertyMatch = undefined;
+        let propertyMatch;
+        do {
+            propertyMatch =
+                dynamic_reference_pattern_1.DynamicReferencePattern.propertyFragment.exec(currentText);
+            if (propertyMatch) {
+                console.log('Property match:', propertyMatch[0]);
+                if (propertyMatch.index === previousPropertyMatch?.index &&
+                    propertyMatch[0] === previousPropertyMatch[0]) {
+                    console.error('Recursion detected:', previousPropertyMatch[0]);
+                    break;
+                }
+                currentText = currentText.replace(propertyMatch[0], logic_service_1.LogicService.resolveProperty(propertyMatch[0], context));
+            }
+            previousPropertyMatch = propertyMatch;
+        } while (propertyMatch);
+        let previousVariableMatch = undefined;
+        let variableMatch;
+        do {
+            variableMatch =
+                dynamic_reference_pattern_1.DynamicReferencePattern.variableFragment.exec(currentText);
+            if (variableMatch) {
+                console.log('Variable match: ', variableMatch[0]);
+                if (variableMatch.index === previousVariableMatch?.index &&
+                    variableMatch[0] === previousVariableMatch[0]) {
+                    console.error('Recursion detected:', variableMatch[0]);
+                    break;
+                }
+                currentText = currentText.replace(variableMatch[0], logic_service_1.LogicService.resolveProperty(variableMatch[0], context));
+            }
+            previousVariableMatch = variableMatch;
+        } while (variableMatch);
+        return currentText;
+    }
     toSnake(value) {
         return value.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
     }

@@ -1,4 +1,6 @@
+import { DynamicContext } from '../interfaces/dynamic-context.interface';
 export declare const StringService: {
+    applyTextVariables(text: string, context: DynamicContext): string;
     toSnake(value: string): string;
     toLowerCaseUnderscore(value: string): string;
     /**

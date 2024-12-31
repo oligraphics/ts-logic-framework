@@ -5,6 +5,7 @@ const dynamic_context_service_1 = require("./dynamic-context.service");
 const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
 const math_expression_service_1 = require("./math-expression.service");
 const conditional_values_service_1 = require("./conditional-values.service");
+const string_service_1 = require("./string.service");
 exports.LogicService = new (class LogicService {
     resolve(value, context, debug = false) {
         if (debug) {
@@ -36,7 +37,7 @@ exports.LogicService = new (class LogicService {
                 if (debug) {
                     console.log(value, 'is a regular string');
                 }
-                return value;
+                return string_service_1.StringService.applyTextVariables(value, context);
             }
         }
         if (Array.isArray(value)) {
