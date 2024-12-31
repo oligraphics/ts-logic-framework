@@ -13,7 +13,7 @@ import { StringService } from './string.service';
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
     if (debug) {
-      console.log('Looking up', JSON.stringify(value));
+      console.debug('Looking up', JSON.stringify(value));
     }
     if (
       typeof value === 'number' ||
@@ -22,7 +22,7 @@ export const LogicService = new (class LogicService {
       value === undefined
     ) {
       if (debug) {
-        console.log(value, 'is a primitive');
+        console.debug(value, 'is a primitive');
       }
       return value as T;
     }
@@ -30,31 +30,31 @@ export const LogicService = new (class LogicService {
     if (typeof value === 'string') {
       if (DynamicReferencePattern.variable.test(value)) {
         if (debug) {
-          console.log(value, 'is a variable reference');
+          console.debug(value, 'is a variable reference');
         }
         return this.resolveVariable<T>(value, context, debug);
       } else if (DynamicReferencePattern.property.test(value)) {
         if (debug) {
-          console.log(value, 'is a property reference');
+          console.debug(value, 'is a property reference');
         }
         return this.resolveProperty<T>(value, context, debug);
       } else {
         if (debug) {
-          console.log(value, 'is a regular string');
+          console.debug(value, 'is a regular string');
         }
-        return StringService.applyTextVariables(value, context) as T;
+        return StringService.applyTextVariables(value, context, debug) as T;
       }
     }
 
     if (Array.isArray(value)) {
       if (value.length > 0 && (value[0] as MathExpressionStepDto)?.operation) {
         if (debug) {
-          console.log('Value is Function');
+          console.debug('Value is Function');
         }
         const innerContext: DynamicContext =
           DynamicContextService.cloneContext(context);
         for (let i = 0; i < value.length; i++) {
-          const currentValue = this.resolve(value[i], innerContext);
+          const currentValue = this.resolve(value[i], innerContext, debug);
           if (i === value.length - 1) {
             return currentValue as T;
           }
@@ -65,10 +65,10 @@ export const LogicService = new (class LogicService {
         }
       } else {
         if (debug) {
-          console.log('Value is a regular array');
+          console.debug('Value is a regular array');
         }
         for (let i = 0; i < value.length; i += 1) {
-          value[i] = this.resolve(value[i], context);
+          value[i] = this.resolve(value[i], context, debug);
         }
         return value as T;
       }
@@ -77,14 +77,14 @@ export const LogicService = new (class LogicService {
     const conditional: ConditionalValueDto = value as ConditionalValueDto;
     if (conditional?.if) {
       if (debug) {
-        console.log('Value is a conditional');
+        console.debug('Value is a conditional');
       }
-      return ConditionalValuesService.resolve(conditional, context);
+      return ConditionalValuesService.resolve(conditional, context, debug);
     }
 
     if ((value as MathExpressionDto)?.operation) {
       const expression: MathExpressionDto = value as MathExpressionDto;
-      return MathExpressionService.resolve(expression, context) as T;
+      return MathExpressionService.resolve(expression, context, debug) as T;
     }
 
     return value as T;

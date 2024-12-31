@@ -5,18 +5,24 @@ import { LogicService } from './logic.service';
 import { Condition } from '../interfaces/condition.interface';
 
 export const ConditionalValuesService = new (class ConditionalValuesService {
-  resolve(value: ConditionalValueDto, context: DynamicContext): any {
+  resolve(
+    value: ConditionalValueDto,
+    context: DynamicContext,
+    debug?: boolean,
+  ): any {
     const conditionResult: true | Condition = ConditionService.testCondition(
       value.if,
       context,
+      debug,
     );
-    if (value.debug) {
+    if (value.debug || debug) {
       const label = value.debugLabel ?? 'Condition';
-      console.log(`${label}: ${JSON.stringify(conditionResult)}`);
+      console.debug(`${label}: ${JSON.stringify(conditionResult)}`);
     }
     return LogicService.resolve(
       conditionResult === true ? value.true : value.false,
       context,
+      debug,
     );
   }
 })();

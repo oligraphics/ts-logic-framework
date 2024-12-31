@@ -3,7 +3,7 @@ import { OperationEnum } from '../enums/operation.enum';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { DynamicValue } from '../interfaces/dynamic-value.interface';
 export declare const MathExpressionService: {
-    resolve(expression: MathExpressionDto | number | string, context: DynamicContext): number;
+    resolve(expression: MathExpressionDto | number | string, context: DynamicContext, debug?: boolean): number;
     /**
      * Parses an expression naively. Important: This does not support nesting with
      * () and all multiplications are prioritized over divisions

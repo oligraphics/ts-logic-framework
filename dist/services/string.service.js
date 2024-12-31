@@ -4,7 +4,7 @@ exports.StringService = void 0;
 const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
 const logic_service_1 = require("./logic.service");
 exports.StringService = new (class {
-    applyTextVariables(text, context) {
+    applyTextVariables(text, context, debug) {
         let currentText = text;
         let previousPropertyMatch = undefined;
         let propertyMatch;
@@ -12,13 +12,15 @@ exports.StringService = new (class {
             propertyMatch =
                 dynamic_reference_pattern_1.DynamicReferencePattern.propertyFragment.exec(currentText);
             if (propertyMatch) {
-                console.log('Property match:', propertyMatch[0]);
+                if (debug) {
+                    console.debug('Property match:', propertyMatch[0]);
+                }
                 if (propertyMatch.index === previousPropertyMatch?.index &&
                     propertyMatch[0] === previousPropertyMatch[0]) {
                     console.error('Recursion detected:', previousPropertyMatch[0]);
                     break;
                 }
-                currentText = currentText.replace(propertyMatch[0], logic_service_1.LogicService.resolveProperty(propertyMatch[0], context));
+                currentText = currentText.replace(propertyMatch[0], logic_service_1.LogicService.resolveProperty(propertyMatch[0], context, debug));
             }
             previousPropertyMatch = propertyMatch;
         } while (propertyMatch);
@@ -28,13 +30,15 @@ exports.StringService = new (class {
             variableMatch =
                 dynamic_reference_pattern_1.DynamicReferencePattern.variableFragment.exec(currentText);
             if (variableMatch) {
-                console.log('Variable match: ', variableMatch[0]);
+                if (debug) {
+                    console.debug('Variable match: ', variableMatch[0]);
+                }
                 if (variableMatch.index === previousVariableMatch?.index &&
                     variableMatch[0] === previousVariableMatch[0]) {
                     console.error('Recursion detected:', variableMatch[0]);
                     break;
                 }
-                currentText = currentText.replace(variableMatch[0], logic_service_1.LogicService.resolveProperty(variableMatch[0], context));
+                currentText = currentText.replace(variableMatch[0], logic_service_1.LogicService.resolveVariable(variableMatch[0], context, debug));
             }
             previousVariableMatch = variableMatch;
         } while (variableMatch);

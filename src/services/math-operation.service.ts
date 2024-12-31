@@ -68,43 +68,43 @@ export const MathOperationService = new (class MathOperationService {
     switch (operation) {
       case OperationEnum.ADD: {
         if (debug) {
-          console.log(debugLabel, a, '+', b, '=', a + b);
+          console.debug(debugLabel, a, '+', b, '=', a + b);
         }
         return a + b;
       }
       case OperationEnum.DIVIDE: {
         if (debug) {
-          console.log(debugLabel, a, '/', b, '=', a / b);
+          console.debug(debugLabel, a, '/', b, '=', a / b);
         }
         return a / b;
       }
       case OperationEnum.MULTIPLY: {
         if (debug) {
-          console.log(debugLabel, a, '*', b, '=', a * b);
+          console.debug(debugLabel, a, '*', b, '=', a * b);
         }
         return a * b;
       }
       case OperationEnum.POW: {
         if (debug) {
-          console.log(debugLabel, a, '^', b, '=', Math.pow(a, b));
+          console.debug(debugLabel, a, '^', b, '=', Math.pow(a, b));
         }
         return a ** b;
       }
       case OperationEnum.SQRT: {
         if (debug) {
-          console.log(debugLabel, `sqrt(${a})`, '=', Math.pow(a, b));
+          console.debug(debugLabel, `sqrt(${a})`, '=', Math.pow(a, b));
         }
         return Math.sqrt(a);
       }
       case OperationEnum.MOD: {
         if (debug) {
-          console.log(debugLabel, a, '%', b, '=', a - b);
+          console.debug(debugLabel, a, '%', b, '=', a - b);
         }
         return a % b;
       }
       case OperationEnum.SUBTRACT: {
         if (debug) {
-          console.log(debugLabel, a, '-', b, '=', a - b);
+          console.debug(debugLabel, a, '-', b, '=', a - b);
         }
         return a - b;
       }
