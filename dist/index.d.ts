@@ -12,6 +12,7 @@ export * from './dto/conditions/logic/or.condition.dto';
 export * from './dto/conditions/logic/xor.condition.dto';
 export * from './dto/expressions/math-expression.dto';
 export * from './dto/expressions/math-expression-step.dto';
+export * from './dto/selection/selection.dto';
 export * from './enums/operation.enum';
 export * from './enums/boolean-logic-type.enum';
 export * from './interfaces/condition.interface';

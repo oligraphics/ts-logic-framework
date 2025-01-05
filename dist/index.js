@@ -28,6 +28,7 @@ __exportStar(require("./dto/conditions/logic/or.condition.dto"), exports);
 __exportStar(require("./dto/conditions/logic/xor.condition.dto"), exports);
 __exportStar(require("./dto/expressions/math-expression.dto"), exports);
 __exportStar(require("./dto/expressions/math-expression-step.dto"), exports);
+__exportStar(require("./dto/selection/selection.dto"), exports);
 __exportStar(require("./enums/operation.enum"), exports);
 __exportStar(require("./enums/boolean-logic-type.enum"), exports);
 __exportStar(require("./interfaces/condition.interface"), exports);
