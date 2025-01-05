@@ -9,12 +9,15 @@ import { MathExpressionService } from './math-expression.service';
 import { ConditionalValueDto } from '../dto/conditionals/conditional-value.dto';
 import { ConditionalValuesService } from './conditional-values.service';
 import { StringService } from './string.service';
+import { SelectionDto } from '../dto/selection/selection.dto';
+import { SelectionService } from './selection.service';
 
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
     if (debug) {
       console.debug('Looking up', JSON.stringify(value));
     }
+    // Primitives
     if (
       typeof value === 'number' ||
       typeof value === 'boolean' ||
@@ -27,6 +30,7 @@ export const LogicService = new (class LogicService {
       return value as T;
     }
 
+    // String
     if (typeof value === 'string') {
       if (DynamicReferencePattern.variable.test(value)) {
         if (debug) {
@@ -46,6 +50,7 @@ export const LogicService = new (class LogicService {
       }
     }
 
+    // Array
     if (Array.isArray(value)) {
       if (value.length > 0 && (value[0] as MathExpressionStepDto)?.operation) {
         if (debug) {
@@ -74,6 +79,7 @@ export const LogicService = new (class LogicService {
       }
     }
 
+    // Conditional
     const conditional: ConditionalValueDto = value as ConditionalValueDto;
     if (conditional?.if) {
       if (debug) {
@@ -82,11 +88,19 @@ export const LogicService = new (class LogicService {
       return ConditionalValuesService.resolve(conditional, context, debug);
     }
 
+    // Expression
     if ((value as MathExpressionDto)?.operation) {
       const expression: MathExpressionDto = value as MathExpressionDto;
       return MathExpressionService.resolve(expression, context, debug) as T;
     }
 
+    // Query
+    if ((value as SelectionDto)?.select?.from) {
+      const selection = value as SelectionDto;
+      return SelectionService.resolve<[]>(selection, context, debug) as T;
+    }
+
+    // Static
     return value as T;
   }
 

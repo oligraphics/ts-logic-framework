@@ -6,11 +6,13 @@ const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.patte
 const math_expression_service_1 = require("./math-expression.service");
 const conditional_values_service_1 = require("./conditional-values.service");
 const string_service_1 = require("./string.service");
+const selection_service_1 = require("./selection.service");
 exports.LogicService = new (class LogicService {
     resolve(value, context, debug = false) {
         if (debug) {
             console.debug('Looking up', JSON.stringify(value));
         }
+        // Primitives
         if (typeof value === 'number' ||
             typeof value === 'boolean' ||
             value === null ||
@@ -20,6 +22,7 @@ exports.LogicService = new (class LogicService {
             }
             return value;
         }
+        // String
         if (typeof value === 'string') {
             if (dynamic_reference_pattern_1.DynamicReferencePattern.variable.test(value)) {
                 if (debug) {
@@ -40,6 +43,7 @@ exports.LogicService = new (class LogicService {
                 return string_service_1.StringService.applyTextVariables(value, context, debug);
             }
         }
+        // Array
         if (Array.isArray(value)) {
             if (value.length > 0 && value[0]?.operation) {
                 if (debug) {
@@ -66,6 +70,7 @@ exports.LogicService = new (class LogicService {
                 return value;
             }
         }
+        // Conditional
         const conditional = value;
         if (conditional?.if) {
             if (debug) {
@@ -73,10 +78,17 @@ exports.LogicService = new (class LogicService {
             }
             return conditional_values_service_1.ConditionalValuesService.resolve(conditional, context, debug);
         }
+        // Expression
         if (value?.operation) {
             const expression = value;
             return math_expression_service_1.MathExpressionService.resolve(expression, context, debug);
         }
+        // Query
+        if (value?.select?.from) {
+            const selection = value;
+            return selection_service_1.SelectionService.resolve(selection, context, debug);
+        }
+        // Static
         return value;
     }
     resolveVariable(name, context, debug) {

@@ -1,3 +1,6 @@
 import { LogicGateDto } from './logic-gate.dto';
-export type XorConditionDto = LogicGateDto;
+import { BooleanLogicTypeEnum } from '../../../enums/boolean-logic-type.enum';
+export type XorConditionDto = {
+    type: BooleanLogicTypeEnum.XOR;
+} & LogicGateDto;
 //# sourceMappingURL=xor.condition.dto.d.ts.map

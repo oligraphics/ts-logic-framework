@@ -20,7 +20,13 @@ export const ConditionalValuesService = new (class ConditionalValuesService {
       console.debug(`${label}: ${JSON.stringify(conditionResult)}`);
     }
     return LogicService.resolve(
-      conditionResult === true ? value.true : value.false,
+      conditionResult === true
+        ? value.true !== undefined
+          ? value.true
+          : true
+        : value.false !== undefined
+        ? value.false
+        : false,
       context,
       debug,
     );

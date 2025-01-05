@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 import { LogicService } from '../../src';
 
 const input = JSON.parse(
-  readFileSync('./test/files/math.json').toString('utf-8'),
+  readFileSync('./test/files/selection.json').toString('utf-8'),
 );
 
 const context: DynamicContext = DynamicContextService.createContext(
@@ -13,4 +13,4 @@ const context: DynamicContext = DynamicContextService.createContext(
 const logic = input['logic'];
 
 const result = LogicService.resolve(logic, context);
-console.log('Result:', result);
+console.log('Fruit:', input['props']['fruit'], 'Berries:', result);

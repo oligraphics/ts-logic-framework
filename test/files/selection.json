@@ -1,0 +1,42 @@
+{
+  "props": {
+    "fruit": [
+      {
+        "id": "apple",
+        "type": "pome",
+        "shape": "round",
+        "color": "green"
+      },
+      {
+        "id": "pear",
+        "type": "pome",
+        "shape": "pyriform",
+        "color": "green"
+      },
+      {
+        "id": "banana",
+        "type": "berry",
+        "shape": "curved",
+        "color": "yellow"
+      },
+      {
+        "id": "raspberry",
+        "type": "berry",
+        "shape": "aggregate",
+        "color": "red"
+      }
+    ]
+  },
+  "logic": {
+    "select": {
+      "from": "{fruit}",
+      "where": {
+        "if": {
+          "type": "equal",
+          "value": "{value.type}",
+          "equals": "berry"
+        }
+      }
+    }
+  }
+}

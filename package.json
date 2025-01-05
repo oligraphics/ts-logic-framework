@@ -10,17 +10,18 @@
     ".": "./dist/index.js"
   },
   "scripts": {
-    "test:logic": "tsx test/src/logic.ts",
+    "test:math": "tsx test/src/math.ts",
     "test:parser": "tsx test/src/parser.ts",
     "test:text": "tsx test/src/text.ts",
+    "test:selection": "tsx test/src/selection.ts",
     "lint": "eslint src/**/* --fix --ignore-pattern '!**/.gitignore'"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/oligraphics/ts-logic-framework.git"
   },
-  "author": "Oliver Detig",
-  "license": "UNLICENSED",
+  "author": "Oligraphics",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/oligraphics/ts-logic-framework/issues"
   },

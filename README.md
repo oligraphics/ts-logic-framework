@@ -11,9 +11,19 @@ npm install
 ````
 
 ````
-npm run test
+# Demonstrate math operations
+npm run test:math
+
+# Demonstrate math expression parser
+npm run test:parser
+
+# Demonstrate selection queries
+npm run test:selection
+
+# Demonstrate text variables
+npm run test:text
 ````
 
-The test configuration is located here:
+The test configurations are located here:
 
-`/test/files/math.json`
+`/test/files`

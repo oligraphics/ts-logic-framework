@@ -10,7 +10,13 @@ exports.ConditionalValuesService = new (class ConditionalValuesService {
             const label = value.debugLabel ?? 'Condition';
             console.debug(`${label}: ${JSON.stringify(conditionResult)}`);
         }
-        return logic_service_1.LogicService.resolve(conditionResult === true ? value.true : value.false, context, debug);
+        return logic_service_1.LogicService.resolve(conditionResult === true
+            ? value.true !== undefined
+                ? value.true
+                : true
+            : value.false !== undefined
+                ? value.false
+                : false, context, debug);
     }
 })();
 //# sourceMappingURL=conditional-values.service.js.map

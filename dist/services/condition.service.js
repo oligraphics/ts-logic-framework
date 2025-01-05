@@ -62,7 +62,7 @@ exports.ConditionService = new (class ConditionService {
                 const equals = logic_service_1.LogicService.resolve(valueLogic.equals, context, logic.debug || debug);
                 const result = equality_service_1.EqualityService.test(value, equals);
                 if (logic.debug || debug) {
-                    console.debug(debugLabel, JSON.stringify(value), Array.isArray(equals) ? 'in' : '=', JSON.stringify(equals), '=', result);
+                    console.debug(debugLabel, JSON.stringify(value), Array.isArray(equals) ? 'in' : '==', JSON.stringify(equals), '=', result);
                 }
                 return result !== invert ? true : logic;
             }
