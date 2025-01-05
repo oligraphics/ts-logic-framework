@@ -106,7 +106,7 @@ exports.LogicService = new (class LogicService {
             console.warn('Context does not contain a value for ', pathParts[0]);
         }
         let currentValue = context[pathParts[0]] ?? undefined;
-        if (console.debug) {
+        if (debug) {
             console.debug('Root value:', currentValue);
         }
         for (let i = 1; i < pathParts.length; i++) {
@@ -122,7 +122,7 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
-        if (console.debug) {
+        if (debug) {
             console.debug(name, '=', currentValue);
         }
         return this.resolve(currentValue, context, debug);
@@ -142,7 +142,7 @@ exports.LogicService = new (class LogicService {
             console.warn('Context does not contain a value for ', `{${pathParts[0]}}`);
         }
         let currentValue = context[`{${pathParts[0]}}`] ?? undefined;
-        if (console.debug) {
+        if (debug) {
             console.debug('Root value:', currentValue);
         }
         for (let i = 1; i < pathParts.length; i++) {
@@ -158,7 +158,7 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
-        if (console.debug) {
+        if (debug) {
             console.debug(name, '=', currentValue);
         }
         return this.resolve(currentValue, context, debug);
