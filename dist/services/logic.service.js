@@ -10,7 +10,7 @@ const selection_service_1 = require("./selection.service");
 exports.LogicService = new (class LogicService {
     resolve(value, context, debug = false) {
         if (debug) {
-            console.debug('Looking up', JSON.stringify(value));
+            console.debug('Resolving', JSON.stringify(value));
         }
         // Primitives
         if (typeof value === 'number' ||
@@ -92,6 +92,9 @@ exports.LogicService = new (class LogicService {
         return value;
     }
     resolveVariable(name, context, debug) {
+        if (debug) {
+            console.debug('Looking up variable', name);
+        }
         if (!context) {
             if (debug) {
                 console.error('Cannot look up', name, 'in undefined context.');
@@ -103,6 +106,9 @@ exports.LogicService = new (class LogicService {
             console.warn('Context does not contain a value for ', pathParts[0]);
         }
         let currentValue = context[pathParts[0]] ?? undefined;
+        if (console.debug) {
+            console.debug('Root value:', currentValue);
+        }
         for (let i = 1; i < pathParts.length; i++) {
             if (typeof currentValue === 'string' ||
                 typeof currentValue === 'number' ||
@@ -116,9 +122,15 @@ exports.LogicService = new (class LogicService {
             }
             currentValue = currentValue[pathParts[i]];
         }
+        if (console.debug) {
+            console.debug(name, '=', currentValue);
+        }
         return this.resolve(currentValue, context, debug);
     }
     resolveProperty(name, context, debug) {
+        if (debug) {
+            console.debug('Looking up property', name);
+        }
         if (!context) {
             if (debug) {
                 console.error('Cannot look up', name, 'in undefined context.');
@@ -130,6 +142,9 @@ exports.LogicService = new (class LogicService {
             console.warn('Context does not contain a value for ', `{${pathParts[0]}}`);
         }
         let currentValue = context[`{${pathParts[0]}}`] ?? undefined;
+        if (console.debug) {
+            console.debug('Root value:', currentValue);
+        }
         for (let i = 1; i < pathParts.length; i++) {
             if (typeof currentValue === 'string' ||
                 typeof currentValue === 'number' ||
@@ -142,6 +157,9 @@ exports.LogicService = new (class LogicService {
                 console.warn('No value found for path part', pathParts[i], 'in property path', name);
             }
             currentValue = currentValue[pathParts[i]];
+        }
+        if (console.debug) {
+            console.debug(name, '=', currentValue);
         }
         return this.resolve(currentValue, context, debug);
     }

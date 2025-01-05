@@ -15,7 +15,7 @@ import { SelectionService } from './selection.service';
 export const LogicService = new (class LogicService {
   resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
     if (debug) {
-      console.debug('Looking up', JSON.stringify(value));
+      console.debug('Resolving', JSON.stringify(value));
     }
     // Primitives
     if (
@@ -109,6 +109,9 @@ export const LogicService = new (class LogicService {
     context: DynamicContext,
     debug?: boolean,
   ): T {
+    if (debug) {
+      console.debug('Looking up variable', name);
+    }
     if (!context) {
       if (debug) {
         console.error('Cannot look up', name, 'in undefined context.');
@@ -120,6 +123,9 @@ export const LogicService = new (class LogicService {
       console.warn('Context does not contain a value for ', pathParts[0]);
     }
     let currentValue = context[pathParts[0]] ?? undefined;
+    if (console.debug) {
+      console.debug('Root value:', currentValue);
+    }
     for (let i = 1; i < pathParts.length; i++) {
       if (
         typeof currentValue === 'string' ||
@@ -140,6 +146,9 @@ export const LogicService = new (class LogicService {
       }
       currentValue = currentValue[pathParts[i]];
     }
+    if (console.debug) {
+      console.debug(name, '=', currentValue);
+    }
     return this.resolve<T>(currentValue, context, debug);
   }
 
@@ -148,6 +157,9 @@ export const LogicService = new (class LogicService {
     context: DynamicContext,
     debug?: boolean,
   ): T {
+    if (debug) {
+      console.debug('Looking up property', name);
+    }
     if (!context) {
       if (debug) {
         console.error('Cannot look up', name, 'in undefined context.');
@@ -162,6 +174,9 @@ export const LogicService = new (class LogicService {
       );
     }
     let currentValue = context[`{${pathParts[0]}}`] ?? undefined;
+    if (console.debug) {
+      console.debug('Root value:', currentValue);
+    }
     for (let i = 1; i < pathParts.length; i++) {
       if (
         typeof currentValue === 'string' ||
@@ -181,6 +196,9 @@ export const LogicService = new (class LogicService {
         );
       }
       currentValue = currentValue[pathParts[i]];
+    }
+    if (console.debug) {
+      console.debug(name, '=', currentValue);
     }
     return this.resolve<T>(currentValue, context, debug);
   }
