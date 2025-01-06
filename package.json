@@ -14,6 +14,7 @@
     "test:parser": "tsx test/src/parser.ts",
     "test:text": "tsx test/src/text.ts",
     "test:selection": "tsx test/src/selection.ts",
+    "test:recursive-properties": "tsx test/src/recursive-properties.ts",
     "lint": "eslint src/**/* --fix --ignore-pattern '!**/.gitignore'"
   },
   "repository": {

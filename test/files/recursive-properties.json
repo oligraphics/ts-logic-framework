@@ -1,0 +1,14 @@
+{
+  "props": {
+    "data": [
+      "one",
+      "two"
+    ],
+    "test": {
+      "select": {
+        "from": "{data}"
+      }
+    }
+  },
+  "logic": "{test.length}"
+}
