@@ -122,7 +122,11 @@ export const LogicService = new (class LogicService {
     if (debug && !context?.hasOwnProperty(pathParts[0])) {
       console.warn('Context does not contain a value for ', pathParts[0]);
     }
-    let currentValue = context[pathParts[0]] ?? undefined;
+    let currentValue: any = this.resolve(
+      context[pathParts[0]] ?? undefined,
+      context,
+      debug,
+    );
     if (debug) {
       console.debug('Root value:', currentValue);
     }
@@ -173,7 +177,11 @@ export const LogicService = new (class LogicService {
         `{${pathParts[0]}}`,
       );
     }
-    let currentValue = context[`{${pathParts[0]}}`] ?? undefined;
+    let currentValue: any = this.resolve(
+      context[`{${pathParts[0]}}`] ?? undefined,
+      context,
+      debug,
+    );
     if (debug) {
       console.debug('Root value:', currentValue);
     }
