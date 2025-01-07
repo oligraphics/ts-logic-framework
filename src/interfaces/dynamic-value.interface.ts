@@ -7,8 +7,4 @@ export type DynamicValue =
   | MathExpressionDto
   | ConditionalValueDto
   | SelectionDto
-  | object
-  | string
-  | number
-  | boolean
-  | null;
+  | unknown;

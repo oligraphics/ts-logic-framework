@@ -17,12 +17,16 @@ export const LogicService = new (class LogicService {
     if (debug) {
       console.debug('Resolving', JSON.stringify(value));
     }
+    // No value
+    if (value === null || value === undefined) {
+      return value as T;
+    }
     // Primitives
     if (
       typeof value === 'number' ||
+      typeof value === 'bigint' ||
       typeof value === 'boolean' ||
-      value === null ||
-      value === undefined
+      typeof value === 'symbol'
     ) {
       if (debug) {
         console.debug(value, 'is a primitive');
