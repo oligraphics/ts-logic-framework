@@ -1,9 +1,9 @@
-import { DynamicValue } from '../../../interfaces/dynamic-value.interface';
 import { ConditionDto } from '../condition.dto';
 import { BooleanLogicTypeEnum } from '../../../enums/boolean-logic-type.enum';
+import { Computable } from '../../../interfaces/computable.interface';
 export type LessThanOrEqualConditionDto = {
     type: BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL;
-    value: DynamicValue;
-    lessThanOrEqual: DynamicValue;
+    value: Computable<unknown>;
+    lessThanOrEqual: Computable<unknown>;
 } & ConditionDto;
 //# sourceMappingURL=less-than-or-equal.condition.dto.d.ts.map

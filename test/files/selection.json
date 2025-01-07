@@ -29,13 +29,12 @@
   },
   "logic": {
     "select": {
+      "debug": true,
       "from": "{fruit}",
       "where": {
-        "if": {
-          "type": "equal",
-          "value": "{value.type}",
-          "equals": "berry"
-        }
+        "type": "equal",
+        "value": "{value.type}",
+        "equals": "berry"
       }
     }
   }

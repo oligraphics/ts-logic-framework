@@ -4,7 +4,7 @@ import { OperationEnum } from '../enums/operation.enum';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
-import { DynamicValue } from '../interfaces/dynamic-value.interface';
+import { ComputableValue } from '../interfaces/computable-value.interface';
 import { IdService } from './id.service';
 import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
 
@@ -13,15 +13,20 @@ export const MathExpressionService = new (class MathExpressionService {
     expression: MathExpressionDto | number | string,
     context: DynamicContext,
     debug?: boolean,
-  ): number {
+  ): number | undefined {
     if ('number' === typeof expression) {
       return expression;
     }
     if ('string' === typeof expression) {
-      return context[expression] ?? 0;
+      const result = context[expression] ?? 0;
+      return typeof result === 'number'
+        ? (result as number)
+        : typeof result === 'string'
+        ? parseFloat(result)
+        : undefined;
     }
-    const a = LogicService.resolve<number>(expression.a, context, debug);
-    const b = LogicService.resolve<number>(expression.b, context, debug);
+    const a = LogicService.resolve<number>(expression.a, context, debug) ?? 0;
+    const b = LogicService.resolve<number>(expression.b, context, debug) ?? 0;
     const result = (expression as MathExpressionStepDto)?.result;
     return MathOperationService.run(
       expression.operation,
@@ -37,13 +42,13 @@ export const MathExpressionService = new (class MathExpressionService {
    * () and all multiplications are prioritized over divisions
    * @param input
    */
-  parse(input: string): DynamicValue {
+  parse(input: string): ComputableValue {
     const functionPattern = /([a-zA-Z_]+)\(([^()]*)\)/g;
     const innerMostBracketsPattern = /\(([^()]*)\)/g;
     const strokeOperatorsPattern = /(.+)([+\-])(.+)/g;
     const dotOperatorsPattern = /(.+)([*\/])(.+)/g;
     let current = input.includes(' ') ? input.split(' ').join('') : input;
-    const placeholders = new Map<string, DynamicValue>();
+    const placeholders = new Map<string, ComputableValue>();
     let functionMatch;
     do {
       functionMatch = functionPattern.exec(current);
@@ -110,8 +115,8 @@ export const MathExpressionService = new (class MathExpressionService {
    * @param wrap Whether to wrap the result in round brackets if it is an expression (default: <code>() => false</code>)
    */
   stringify(
-    input: DynamicValue,
-    wrap?: (value: DynamicValue) => boolean,
+    input: ComputableValue,
+    wrap?: (value: ComputableValue) => boolean,
   ): string {
     if (Array.isArray(input)) {
       const stepsMap = new Map<string, string>();
@@ -131,10 +136,10 @@ export const MathExpressionService = new (class MathExpressionService {
       return result;
     } else if (typeof input === 'object') {
       const expression = input as MathExpressionDto;
-      const a = this.stringify(expression.a, (v: DynamicValue) =>
+      const a = this.stringify(expression.a, (v: ComputableValue) =>
         this.requireWrapping(expression.operation, v, false),
       );
-      const b = this.stringify(expression.b, (v: DynamicValue) =>
+      const b = this.stringify(expression.b, (v: ComputableValue) =>
         this.requireWrapping(expression.operation, v, true),
       );
       let result;
@@ -155,7 +160,7 @@ export const MathExpressionService = new (class MathExpressionService {
 
   requireWrapping(
     outerOperation: OperationEnum,
-    value: DynamicValue,
+    value: ComputableValue,
     isRightSide: boolean,
   ): boolean {
     const innerOperation = (value as MathExpressionDto)?.operation;
@@ -187,8 +192,8 @@ export const MathExpressionService = new (class MathExpressionService {
 
   _resolve(
     input: unknown,
-    placeholders: Map<string, DynamicValue>,
-  ): DynamicValue {
+    placeholders: Map<string, ComputableValue>,
+  ): ComputableValue {
     if (typeof input === 'string') {
       return placeholders.has(input)
         ? this._resolve(placeholders.get(input), placeholders)
@@ -205,7 +210,7 @@ export const MathExpressionService = new (class MathExpressionService {
         b: this._resolve(expression.b, placeholders),
       };
     }
-    return input as DynamicValue;
+    return input as ComputableValue;
   }
 
   _parseFunction(name: string, args: string[]): MathExpressionDto {

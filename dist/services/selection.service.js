@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SelectionService = void 0;
 const logic_service_1 = require("./logic.service");
 const dynamic_context_service_1 = require("./dynamic-context.service");
+const condition_service_1 = require("./condition.service");
 exports.SelectionService = new (class SelectionService {
     resolve(selection, context, debug) {
         const { from, where, orderBy, limit, offset, groupBy, debug: _debug, } = selection.select;
@@ -22,12 +23,12 @@ exports.SelectionService = new (class SelectionService {
             console.debug('Selection found', items.length, 'possible items', selection);
         }
         let validItems = where
-            ? items.filter((i) => logic_service_1.LogicService.resolve(where, {
+            ? items.filter((i) => condition_service_1.ConditionService.testCondition(where, {
                 ...context,
                 ...dynamic_context_service_1.DynamicContextService.createContext({
                     value: i,
                 }),
-            }, debug))
+            }, debug) === true)
             : [...items];
         if (debug) {
             console.debug('Valid items:', validItems.length);

@@ -1,10 +1,10 @@
 import { Condition } from '../../interfaces/condition.interface';
-import { DynamicValue } from '../../interfaces/dynamic-value.interface';
+import { Computable } from '../../interfaces/computable.interface';
 
 export type ConditionalValueDto = {
   debug?: boolean;
   debugLabel?: string;
   if: Condition;
-  true: DynamicValue;
-  false: DynamicValue;
+  true: Computable<unknown>;
+  false: Computable<unknown>;
 };

@@ -1,0 +1,1 @@
+{"version":3,"file":"computable-value.interface.d.ts","sourceRoot":"src/","sources":["interfaces/computable-value.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,iBAAiB,EAAE,MAAM,wCAAwC,CAAC;AAC3E,OAAO,EAAE,mBAAmB,EAAE,MAAM,2CAA2C,CAAC;AAChF,OAAO,EAAE,YAAY,EAAE,MAAM,gCAAgC,CAAC;AAE9D,MAAM,MAAM,eAAe,GACvB,eAAe,EAAE,GACjB,iBAAiB,GACjB,mBAAmB,GACnB,YAAY,GACZ,OAAO,CAAC"}

@@ -1,10 +1,10 @@
 import Rand from 'rand-seed';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
-import { DynamicValue } from '../interfaces/dynamic-value.interface';
+import { ComputableValue } from '../interfaces/computable-value.interface';
 export declare const LogicService: {
-    resolve<T>(value: DynamicValue, context: DynamicContext, debug?: boolean): T;
-    resolveVariable<T>(name: string, context: DynamicContext, debug?: boolean): T;
-    resolveProperty<T>(name: string, context: DynamicContext, debug?: boolean): T;
+    resolve<T>(value: ComputableValue, context: DynamicContext, debug?: boolean): T | undefined;
+    resolveVariable<T>(name: string, context: DynamicContext, debug?: boolean): T | undefined;
+    resolveProperty<T>(name: string, context: DynamicContext, debug?: boolean): T | undefined;
     createVariableMap(variables: Map<string, any>, parentPath: string): Map<string, any>;
     /**
      * Replaces all occurrences of the provided variables with their value.

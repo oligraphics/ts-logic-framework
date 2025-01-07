@@ -2,6 +2,7 @@ import { SelectionDto } from '../dto/selection/selection.dto';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { DynamicContextService } from './dynamic-context.service';
+import { ConditionService } from './condition.service';
 
 export const SelectionService = new (class SelectionService {
   resolve<T extends []>(
@@ -39,17 +40,18 @@ export const SelectionService = new (class SelectionService {
       );
     }
     let validItems: T = where
-      ? (items.filter((i) =>
-          LogicService.resolve(
-            where,
-            {
-              ...context,
-              ...DynamicContextService.createContext({
-                value: i,
-              }),
-            },
-            debug,
-          ),
+      ? (items.filter(
+          (i) =>
+            ConditionService.testCondition(
+              where,
+              {
+                ...context,
+                ...DynamicContextService.createContext({
+                  value: i,
+                }),
+              },
+              debug,
+            ) === true,
         ) as T)
       : ([...items] as T);
     if (debug) {

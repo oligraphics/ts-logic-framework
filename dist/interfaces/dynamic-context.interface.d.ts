@@ -1,4 +1,4 @@
 export type DynamicContext = {
-    [key: string]: any;
+    [key: string]: unknown;
 };
 //# sourceMappingURL=dynamic-context.interface.d.ts.map

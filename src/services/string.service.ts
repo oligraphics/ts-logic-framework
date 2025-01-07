@@ -3,6 +3,10 @@ import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
 import { LogicService } from './logic.service';
 
 export const StringService = new (class {
+  /**
+   * Replaces {properties} and #variables with context values. This supports
+   * nested object access with {object.property...} and #object.property...
+   */
   applyTextVariables(text: string, context: DynamicContext, debug?: boolean) {
     let currentText = text;
     let previousPropertyMatch = undefined;
@@ -23,7 +27,7 @@ export const StringService = new (class {
         }
         currentText = currentText.replace(
           propertyMatch[0],
-          LogicService.resolveProperty(propertyMatch[0], context, debug),
+          LogicService.resolveProperty(propertyMatch[0], context, debug) ?? '',
         );
       }
       previousPropertyMatch = propertyMatch;
@@ -46,16 +50,26 @@ export const StringService = new (class {
         }
         currentText = currentText.replace(
           variableMatch[0],
-          LogicService.resolveVariable(variableMatch[0], context, debug),
+          LogicService.resolveVariable(variableMatch[0], context, debug) ?? '',
         );
       }
       previousVariableMatch = variableMatch;
     } while (variableMatch);
     return currentText;
   }
+
+  /**
+   * Convert <code>thisIsAValue</code> to <code>this_is_a_value</code>
+   */
   toSnake(value: string): string {
     return value.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
   }
+
+  /**
+   * Convert <code>This is a value with umlaut äöü</code> to
+   * <code>this_is_a_value_with_umlaut_</code> by trimming all non-alphanumeric
+   * and non-underscore characters and then converting to lower case
+   */
   toLowerCaseUnderscore(value: string) {
     return value
       .split(' ')

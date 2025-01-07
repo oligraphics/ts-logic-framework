@@ -1,7 +1,7 @@
 import Rand from 'rand-seed';
 import { DynamicContextService } from './dynamic-context.service';
 import { DynamicContext } from '../interfaces/dynamic-context.interface';
-import { DynamicValue } from '../interfaces/dynamic-value.interface';
+import { ComputableValue } from '../interfaces/computable-value.interface';
 import { DynamicReferencePattern } from '../patterns/dynamic-reference.pattern';
 import { MathExpressionStepDto } from '../dto/expressions/math-expression-step.dto';
 import { MathExpressionDto } from '../dto/expressions/math-expression.dto';
@@ -13,7 +13,11 @@ import { SelectionDto } from '../dto/selection/selection.dto';
 import { SelectionService } from './selection.service';
 
 export const LogicService = new (class LogicService {
-  resolve<T>(value: DynamicValue, context: DynamicContext, debug = false): T {
+  resolve<T>(
+    value: ComputableValue,
+    context: DynamicContext,
+    debug = false,
+  ): T | undefined {
     if (debug) {
       console.debug('Resolving', JSON.stringify(value));
     }
@@ -112,7 +116,7 @@ export const LogicService = new (class LogicService {
     name: string,
     context: DynamicContext,
     debug?: boolean,
-  ): T {
+  ): T | undefined {
     if (debug) {
       console.debug('Looking up variable', name);
     }
@@ -164,7 +168,7 @@ export const LogicService = new (class LogicService {
     name: string,
     context: DynamicContext,
     debug?: boolean,
-  ): T {
+  ): T | undefined {
     if (debug) {
       console.debug('Looking up property', name);
     }

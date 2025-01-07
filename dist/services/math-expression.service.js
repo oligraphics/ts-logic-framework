@@ -12,10 +12,15 @@ exports.MathExpressionService = new (class MathExpressionService {
             return expression;
         }
         if ('string' === typeof expression) {
-            return context[expression] ?? 0;
+            const result = context[expression] ?? 0;
+            return typeof result === 'number'
+                ? result
+                : typeof result === 'string'
+                    ? parseFloat(result)
+                    : undefined;
         }
-        const a = logic_service_1.LogicService.resolve(expression.a, context, debug);
-        const b = logic_service_1.LogicService.resolve(expression.b, context, debug);
+        const a = logic_service_1.LogicService.resolve(expression.a, context, debug) ?? 0;
+        const b = logic_service_1.LogicService.resolve(expression.b, context, debug) ?? 0;
         const result = expression?.result;
         return math_operation_service_js_1.MathOperationService.run(expression.operation, a, b, expression.debug || debug, expression.debugLabel ?? `#${result ?? 'value'}`);
     }

@@ -22,9 +22,10 @@ export * from './dto/selection/selection.dto';
 export * from './enums/operation.enum';
 export * from './enums/boolean-logic-type.enum';
 
+export * from './interfaces/computable.interface';
+export * from './interfaces/computable-value.interface';
 export * from './interfaces/condition.interface';
 export * from './interfaces/dynamic-context.interface';
-export * from './interfaces/dynamic-value.interface';
 
 export * from './services/condition.service';
 export * from './services/conditional-values.service';

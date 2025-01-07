@@ -1,1 +1,1 @@
-export type DynamicContext = { [key: string]: any };
+export type DynamicContext = { [key: string]: unknown };
