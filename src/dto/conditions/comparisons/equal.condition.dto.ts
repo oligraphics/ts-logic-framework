@@ -3,7 +3,7 @@ import { BooleanLogicTypeEnum } from '../../../enums/boolean-logic-type.enum';
 import { Computable } from '../../../interfaces/computable.interface';
 
 export type EqualConditionDto = {
-  type: BooleanLogicTypeEnum.AND;
+  type: BooleanLogicTypeEnum.EQUAL;
   value: Computable<unknown>;
   equals: Computable<unknown>;
 } & ConditionDto;
