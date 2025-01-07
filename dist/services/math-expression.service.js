@@ -8,6 +8,7 @@ const id_service_1 = require("./id.service");
 const dynamic_reference_pattern_1 = require("../patterns/dynamic-reference.pattern");
 exports.MathExpressionService = new (class MathExpressionService {
     resolve(expression, context, debug) {
+        debug = debug || expression?.debug;
         if ('number' === typeof expression) {
             return expression;
         }

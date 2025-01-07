@@ -14,6 +14,7 @@ export const MathExpressionService = new (class MathExpressionService {
     context: DynamicContext,
     debug?: boolean,
   ): number | undefined {
+    debug = debug || (expression as MathExpressionDto)?.debug;
     if ('number' === typeof expression) {
       return expression;
     }
