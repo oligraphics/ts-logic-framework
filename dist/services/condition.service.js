@@ -18,21 +18,46 @@ exports.ConditionService = new (class ConditionService {
      * returns the condition that failed.
      */
     testCondition(condition, context, debug) {
-        if (typeof condition === 'string') {
-            const parsed = logic_service_1.LogicService.resolve(condition, context, debug);
-            if (typeof parsed === 'string' && parsed === condition) {
-                return parsed;
-            }
-            return this.testCondition(parsed, context, debug);
+        if (debug) {
+            console.debug('Check condition', condition);
         }
+        // No value
+        if (condition === null || condition === undefined) {
+            if (debug) {
+                console.error('Condition is empty');
+            }
+            return condition;
+        }
+        // Primitives
         if (typeof condition === 'boolean') {
             return condition ? true : condition;
         }
         if (typeof condition === 'number') {
             return condition >= 1 ? true : condition;
         }
+        // Strings
+        if (typeof condition === 'string') {
+            const parsed = logic_service_1.LogicService.resolve(condition, context, debug);
+            if (typeof parsed === 'string' && parsed === condition) {
+                if (debug) {
+                    console.error('Condition does not return a boolean', condition);
+                }
+                return parsed;
+            }
+            return this.testCondition(parsed, context, debug);
+        }
+        // Condition Logic
         const logic = condition;
+        if (!logic.type) {
+            if (debug) {
+                console.error('Invalid condition logic without a type:', condition);
+                return logic;
+            }
+        }
         if (logic.type === boolean_logic_type_enum_1.BooleanLogicTypeEnum.NONE) {
+            if (debug) {
+                console.debug('Empty condition, result is', logic.invert);
+            }
             return logic.invert ? true : logic;
         }
         if (!Object.values(boolean_logic_type_enum_1.BooleanLogicTypeEnum).includes(logic.type)) {
@@ -40,7 +65,13 @@ exports.ConditionService = new (class ConditionService {
             return logic;
         }
         if (this.comparisons.includes(logic.type)) {
+            if (debug) {
+                console.debug('Perform comparison', logic.type);
+            }
             return this.testComparison(condition, context, debug);
+        }
+        if (debug) {
+            console.debug('Run logic gate', logic.type);
         }
         const logicGateResult = logic_gate_service_1.LogicGateService.test(logic, context, debug);
         if (logic.invert) {

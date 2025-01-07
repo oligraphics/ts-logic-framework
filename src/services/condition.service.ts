@@ -30,14 +30,18 @@ export const ConditionService = new (class ConditionService {
     context: DynamicContext,
     debug?: boolean,
   ): true | Condition {
-    if (typeof condition === 'string') {
-      const parsed = LogicService.resolve(condition, context, debug);
-      if (typeof parsed === 'string' && parsed === condition) {
-        return parsed;
+    if (debug) {
+      console.debug('Check condition', condition);
+    }
+    // No value
+    if (condition === null || condition === undefined) {
+      if (debug) {
+        console.error('Condition is empty');
       }
-      return this.testCondition(parsed as Condition, context, debug);
+      return condition;
     }
 
+    // Primitives
     if (typeof condition === 'boolean') {
       return condition ? true : condition;
     }
@@ -45,9 +49,32 @@ export const ConditionService = new (class ConditionService {
       return condition >= 1 ? true : condition;
     }
 
+    // Strings
+    if (typeof condition === 'string') {
+      const parsed = LogicService.resolve(condition, context, debug);
+      if (typeof parsed === 'string' && parsed === condition) {
+        if (debug) {
+          console.error('Condition does not return a boolean', condition);
+        }
+        return parsed;
+      }
+      return this.testCondition(parsed as Condition, context, debug);
+    }
+
+    // Condition Logic
     const logic = condition as ConditionDto;
 
+    if (!logic.type) {
+      if (debug) {
+        console.error('Invalid condition logic without a type:', condition);
+        return logic;
+      }
+    }
+
     if (logic.type === BooleanLogicTypeEnum.NONE) {
+      if (debug) {
+        console.debug('Empty condition, result is', logic.invert);
+      }
       return logic.invert ? true : logic;
     }
 
@@ -57,9 +84,15 @@ export const ConditionService = new (class ConditionService {
     }
 
     if (this.comparisons.includes(logic.type)) {
+      if (debug) {
+        console.debug('Perform comparison', logic.type);
+      }
       return this.testComparison(condition, context, debug);
     }
 
+    if (debug) {
+      console.debug('Run logic gate', logic.type);
+    }
     const logicGateResult = LogicGateService.test(
       <LogicGateDto>logic,
       context,
