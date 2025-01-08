@@ -13,6 +13,8 @@ exports.ConditionService = new (class ConditionService {
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL,
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN,
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.LIKE,
+        boolean_logic_type_enum_1.BooleanLogicTypeEnum.PATTERN,
     ];
     /**
      * @returns <code>true</code> if the result of the test is true, otherwise

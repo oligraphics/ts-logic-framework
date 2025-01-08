@@ -22,6 +22,8 @@ export const ConditionService = new (class ConditionService {
     BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL,
     BooleanLogicTypeEnum.LESS_THAN,
     BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL,
+    BooleanLogicTypeEnum.LIKE,
+    BooleanLogicTypeEnum.PATTERN,
   ];
 
   /**
