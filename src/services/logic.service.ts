@@ -127,41 +127,8 @@ export const LogicService = new (class LogicService {
       return undefined as T;
     }
     const pathParts = name.split('.');
-    if (debug && !context?.hasOwnProperty(pathParts[0])) {
-      console.warn('Context does not contain a value for ', pathParts[0]);
-    }
-    let currentValue: any = this.resolve(
-      context[pathParts[0]] ?? undefined,
-      context,
-      debug,
-    );
-    if (debug) {
-      console.debug('Root value:', currentValue);
-    }
-    for (let i = 1; i < pathParts.length; i++) {
-      if (
-        typeof currentValue === 'string' ||
-        typeof currentValue === 'number' ||
-        typeof currentValue === 'boolean' ||
-        currentValue === null ||
-        currentValue === undefined
-      ) {
-        return currentValue as T;
-      }
-      if (debug && !currentValue.hasOwnProperty(pathParts[i])) {
-        console.warn(
-          'No value found for path part',
-          pathParts[i],
-          'in variable path',
-          name,
-        );
-      }
-      currentValue = currentValue[pathParts[i]];
-    }
-    if (debug) {
-      console.debug(name, '=', currentValue);
-    }
-    return this.resolve<T>(currentValue, context, debug);
+    const initialKey = pathParts[0];
+    return this.resolveNested<T>(name, initialKey, pathParts, context, debug);
   }
 
   resolveProperty<T>(
@@ -179,17 +146,30 @@ export const LogicService = new (class LogicService {
       return undefined as T;
     }
     const pathParts = name.substring(1, name.length - 1).split('.');
-    if (debug && !context?.hasOwnProperty(pathParts[0])) {
-      console.warn(
-        'Context does not contain a value for ',
-        `{${pathParts[0]}}`,
-      );
+    const initialKey = `{${pathParts[0]}}`;
+    return this.resolveNested<T>(name, initialKey, pathParts, context, debug);
+  }
+
+  resolveNested<T>(
+    fullPath: string,
+    initialKey: string,
+    pathParts: string[],
+    context: DynamicContext,
+    debug?: boolean,
+  ): T | undefined {
+    if (!context?.hasOwnProperty(initialKey)) {
+      if (debug) {
+        console.warn(
+          'Context does not contain a value for ',
+          `${initialKey}`,
+          'Available keys:',
+          ...Object.keys(context),
+        );
+      }
+      return undefined;
     }
-    let currentValue: any = this.resolve(
-      context[`{${pathParts[0]}}`] ?? undefined,
-      context,
-      debug,
-    );
+    const initialValue = context[initialKey];
+    let currentValue: any = this.resolve(initialValue, context, debug);
     if (debug) {
       console.debug('Root value:', currentValue);
     }
@@ -203,18 +183,21 @@ export const LogicService = new (class LogicService {
       ) {
         return currentValue as T;
       }
-      if (debug && !currentValue.hasOwnProperty(pathParts[i])) {
-        console.warn(
-          'No value found for path part',
-          pathParts[i],
-          'in property path',
-          name,
-        );
+      if (!currentValue.hasOwnProperty(pathParts[i])) {
+        if (debug) {
+          console.warn(
+            'No value found for path part',
+            pathParts[i],
+            'in path',
+            fullPath,
+          );
+        }
+        return undefined;
       }
       currentValue = currentValue[pathParts[i]];
     }
     if (debug) {
-      console.debug(name, '=', currentValue);
+      console.debug(fullPath, 'resolves to', currentValue);
     }
     return this.resolve<T>(currentValue, context, debug);
   }
