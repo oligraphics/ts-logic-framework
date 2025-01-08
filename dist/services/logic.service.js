@@ -10,7 +10,7 @@ const selection_service_1 = require("./selection.service");
 exports.LogicService = new (class LogicService {
     resolve(value, context, debug = false) {
         if (debug) {
-            console.debug('Resolving', JSON.stringify(value));
+            console.debug('Resolving', value);
         }
         // No value
         if (value === null || value === undefined) {
@@ -205,9 +205,9 @@ exports.LogicService = new (class LogicService {
     applyOverrides(base, overrides) {
         if (!overrides) {
             if (!base) {
-                return JSON.parse(JSON.stringify(overrides));
+                return {};
             }
-            const result = JSON.parse(JSON.stringify(base));
+            const result = { ...base };
             for (const key of Object.keys(overrides)) {
                 result[key] = this.applyOverrides(base[key], overrides[key]);
             }
@@ -215,9 +215,9 @@ exports.LogicService = new (class LogicService {
         }
         else if (overrides instanceof Array) {
             if (!(base instanceof Array) || base.length === 0) {
-                return JSON.parse(JSON.stringify(overrides));
+                return [...overrides];
             }
-            const result = JSON.parse(JSON.stringify(base));
+            const result = [...base];
             const appended = [];
             for (let i = 0; i < overrides.length; i++) {
                 const override = overrides[i];
@@ -233,7 +233,7 @@ exports.LogicService = new (class LogicService {
                     }
                 }
                 if (i >= result.length) {
-                    appended.push(JSON.parse(JSON.stringify(override)));
+                    appended.push(override);
                     continue;
                 }
                 result[i] = this.applyOverrides(base[i], override);

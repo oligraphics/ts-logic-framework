@@ -8,7 +8,7 @@ exports.ConditionalValuesService = new (class ConditionalValuesService {
         const conditionResult = condition_service_1.ConditionService.testCondition(value.if, context, debug);
         if (value.debug || debug) {
             const label = value.debugLabel ?? 'Condition';
-            console.debug(`${label}: ${JSON.stringify(conditionResult)}`);
+            console.debug(`${label}:`, conditionResult);
         }
         return logic_service_1.LogicService.resolve(conditionResult === true
             ? value.true !== undefined

@@ -17,7 +17,7 @@ export const ConditionalValuesService = new (class ConditionalValuesService {
     );
     if (value.debug || debug) {
       const label = value.debugLabel ?? 'Condition';
-      console.debug(`${label}: ${JSON.stringify(conditionResult)}`);
+      console.debug(`${label}:`, conditionResult);
     }
     return LogicService.resolve(
       conditionResult === true

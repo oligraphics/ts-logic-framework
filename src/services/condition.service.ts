@@ -132,9 +132,9 @@ export const ConditionService = new (class ConditionService {
         if (logic.debug || debug) {
           console.debug(
             debugLabel,
-            JSON.stringify(value),
+            value,
             Array.isArray(equals) ? 'in' : '==',
-            JSON.stringify(equals),
+            equals,
             '=',
             result,
           );
@@ -155,14 +155,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input > value;
         if (logic.debug || debug) {
-          console.debug(
-            debugLabel,
-            JSON.stringify(input),
-            '>',
-            JSON.stringify(value),
-            '=',
-            result,
-          );
+          console.debug(debugLabel, input, '>', value, '=', result);
         }
         return result !== invert ? true : logic;
       }
@@ -180,14 +173,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input >= value;
         if (logic.debug || debug) {
-          console.debug(
-            debugLabel,
-            JSON.stringify(input),
-            '>=',
-            JSON.stringify(value),
-            '=',
-            result,
-          );
+          console.debug(debugLabel, input, '>=', value, '=', result);
         }
         return result !== invert ? true : logic;
       }
@@ -205,14 +191,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input <= value;
         if (logic.debug || debug) {
-          console.debug(
-            debugLabel,
-            JSON.stringify(input),
-            '<=',
-            JSON.stringify(value),
-            '=',
-            result,
-          );
+          console.debug(debugLabel, input, '<=', value, '=', result);
         }
         return result !== invert ? true : logic;
       }
@@ -230,14 +209,7 @@ export const ConditionService = new (class ConditionService {
         ) as number;
         const result = input < value;
         if (logic.debug || debug) {
-          console.debug(
-            debugLabel,
-            JSON.stringify(input),
-            '<',
-            JSON.stringify(value),
-            '=',
-            result,
-          );
+          console.debug(debugLabel, input, '<', value, '=', result);
         }
         return result !== invert ? true : logic;
       }

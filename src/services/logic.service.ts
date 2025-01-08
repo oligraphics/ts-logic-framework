@@ -19,7 +19,7 @@ export const LogicService = new (class LogicService {
     debug = false,
   ): T | undefined {
     if (debug) {
-      console.debug('Resolving', JSON.stringify(value));
+      console.debug('Resolving', value);
     }
     // No value
     if (value === null || value === undefined) {
@@ -260,18 +260,18 @@ export const LogicService = new (class LogicService {
   ): { [key: string]: any } {
     if (!overrides) {
       if (!base) {
-        return JSON.parse(JSON.stringify(overrides));
+        return {};
       }
-      const result: { [key: string]: any } = JSON.parse(JSON.stringify(base));
+      const result: { [key: string]: any } = { ...base };
       for (const key of Object.keys(overrides)) {
         result[key] = this.applyOverrides(base[key], overrides[key]);
       }
       return result;
     } else if (overrides instanceof Array) {
       if (!(base instanceof Array) || base.length === 0) {
-        return JSON.parse(JSON.stringify(overrides));
+        return [...overrides];
       }
-      const result = JSON.parse(JSON.stringify(base));
+      const result = [...base];
       const appended = [];
       for (let i = 0; i < overrides.length; i++) {
         const override = overrides[i];
@@ -291,7 +291,7 @@ export const LogicService = new (class LogicService {
           }
         }
         if (i >= result.length) {
-          appended.push(JSON.parse(JSON.stringify(override)));
+          appended.push(override);
           continue;
         }
         result[i] = this.applyOverrides(base[i], override);
