@@ -21,6 +21,8 @@ __exportStar(require("./dto/conditions/comparisons/greater-than.condition.dto"),
 __exportStar(require("./dto/conditions/comparisons/greater-than-or-equal.condition.dto"), exports);
 __exportStar(require("./dto/conditions/comparisons/less-than.condition.dto"), exports);
 __exportStar(require("./dto/conditions/comparisons/less-than-or-equal.condition.dto"), exports);
+__exportStar(require("./dto/conditions/comparisons/like.condition.dto"), exports);
+__exportStar(require("./dto/conditions/comparisons/pattern.condition.dto"), exports);
 __exportStar(require("./dto/conditions/logic/and.condition.dto"), exports);
 __exportStar(require("./dto/conditions/logic/nand.condition.dto"), exports);
 __exportStar(require("./dto/conditions/logic/nor.condition.dto"), exports);
@@ -40,6 +42,7 @@ __exportStar(require("./services/conditional-values.service"), exports);
 __exportStar(require("./services/dynamic-context.service"), exports);
 __exportStar(require("./services/equality.service"), exports);
 __exportStar(require("./services/id.service"), exports);
+__exportStar(require("./services/likeness.service"), exports);
 __exportStar(require("./services/logic.service"), exports);
 __exportStar(require("./services/logic-gate.service"), exports);
 __exportStar(require("./services/math-expression.service"), exports);

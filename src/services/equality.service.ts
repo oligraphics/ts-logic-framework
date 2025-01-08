@@ -1,4 +1,11 @@
 export const EqualityService = new (class CompareService {
+  /**
+   * Test if <code>value</code> matches <code>equals</code> exactly
+   * <ul>
+   *   <li>If <code>equals</code> is a primitive or an object, test <code>value === equals</code></li>
+   *   <li>If <code>equals</code> is an array, test individual array items as <code>test(value[n], equals[n])</code></li>
+   *   </ul>
+   */
   test(value: unknown, equals: unknown): boolean {
     if (
       equals === undefined ||
@@ -11,34 +18,15 @@ export const EqualityService = new (class CompareService {
       return value === equals;
     }
     if (Array.isArray(equals)) {
-      if (Array.isArray(value)) {
-        // All elements in value must be included in input
-        return equals.find((v) => !value.includes(v)) === undefined;
-      } else {
-        // Value must include the input
-        return equals.includes(value);
-      }
-    }
-    if (Array.isArray(value)) {
-      // Input must include the value
-      return value.includes(equals);
-    }
-    if (typeof value !== 'object') {
-      // Value should have been an object as well
-      return false;
-    }
-    const valueObject: { [key: string]: unknown } = value as {
-      [key: string]: unknown;
-    };
-    // Input must match the object structure in equals
-    for (const [key, valueEquals] of Object.entries(<object>equals)) {
-      if (
-        !valueObject.hasOwnProperty(key) ||
-        !this.test(valueObject[key], valueEquals)
-      ) {
+      if (!Array.isArray(value)) {
         return false;
       }
+
+      return (
+        equals.length === value.length &&
+        equals.every((item, index) => this.test(value[index], item))
+      );
     }
-    return true;
+    return value === equals;
   }
 })();

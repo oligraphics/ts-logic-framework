@@ -5,6 +5,7 @@ const boolean_logic_type_enum_1 = require("../enums/boolean-logic-type.enum");
 const logic_service_1 = require("./logic.service");
 const logic_gate_service_1 = require("./logic-gate.service");
 const equality_service_1 = require("./equality.service");
+const likeness_service_1 = require("./likeness.service");
 exports.ConditionService = new (class ConditionService {
     comparisons = [
         boolean_logic_type_enum_1.BooleanLogicTypeEnum.EQUAL,
@@ -93,14 +94,24 @@ exports.ConditionService = new (class ConditionService {
                 const equals = logic_service_1.LogicService.resolve(valueLogic.equals, context, logic.debug || debug);
                 const result = equality_service_1.EqualityService.test(value, equals);
                 if (logic.debug || debug) {
-                    console.debug(debugLabel, value, Array.isArray(equals) ? 'in' : '==', equals, '=', result);
+                    console.debug(debugLabel, value, 'equals', equals, '=', result);
+                }
+                return result !== invert ? true : logic;
+            }
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LIKE: {
+                const valueLogic = logic;
+                const value = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
+                const equals = logic_service_1.LogicService.resolve(valueLogic.equals, context, logic.debug || debug);
+                const result = likeness_service_1.LikenessService.test(value, equals);
+                if (logic.debug || debug) {
+                    console.debug(debugLabel, value, 'like', equals, '=', result);
                 }
                 return result !== invert ? true : logic;
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN: {
                 const valueLogic = logic;
-                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
-                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThan, context, logic.debug || debug);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug) ?? 0;
+                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThan, context, logic.debug || debug) ?? 0;
                 const result = input > value;
                 if (logic.debug || debug) {
                     console.debug(debugLabel, input, '>', value, '=', result);
@@ -109,8 +120,8 @@ exports.ConditionService = new (class ConditionService {
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.GREATER_THAN_OR_EQUAL: {
                 const valueLogic = logic;
-                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
-                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThanOrEqual, context, logic.debug || debug);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug) ?? 0;
+                const value = logic_service_1.LogicService.resolve(valueLogic.greaterThanOrEqual, context, logic.debug || debug) ?? 0;
                 const result = input >= value;
                 if (logic.debug || debug) {
                     console.debug(debugLabel, input, '>=', value, '=', result);
@@ -119,8 +130,8 @@ exports.ConditionService = new (class ConditionService {
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN_OR_EQUAL: {
                 const valueLogic = logic;
-                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
-                const value = logic_service_1.LogicService.resolve(valueLogic.lessThanOrEqual, context, logic.debug || debug);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug) ?? 0;
+                const value = logic_service_1.LogicService.resolve(valueLogic.lessThanOrEqual, context, logic.debug || debug) ?? 0;
                 const result = input <= value;
                 if (logic.debug || debug) {
                     console.debug(debugLabel, input, '<=', value, '=', result);
@@ -129,11 +140,28 @@ exports.ConditionService = new (class ConditionService {
             }
             case boolean_logic_type_enum_1.BooleanLogicTypeEnum.LESS_THAN: {
                 const valueLogic = logic;
-                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
-                const value = logic_service_1.LogicService.resolve(valueLogic.lessThan, context, logic.debug || debug);
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug) ?? 0;
+                const value = logic_service_1.LogicService.resolve(valueLogic.lessThan, context, logic.debug || debug) ?? 0;
                 const result = input < value;
                 if (logic.debug || debug) {
                     console.debug(debugLabel, input, '<', value, '=', result);
+                }
+                return result !== invert ? true : logic;
+            }
+            case boolean_logic_type_enum_1.BooleanLogicTypeEnum.PATTERN: {
+                const valueLogic = logic;
+                const input = logic_service_1.LogicService.resolve(valueLogic.value, context, logic.debug || debug);
+                const pattern = logic_service_1.LogicService.resolve(valueLogic.pattern, context, logic.debug || debug);
+                const flags = valueLogic.flags ?? 'g';
+                if (pattern === undefined) {
+                    if (logic.debug || debug) {
+                        console.warn('Condition does not provide a regular expression', logic);
+                    }
+                    return logic;
+                }
+                const result = input ? new RegExp(pattern, flags).test(input) : false;
+                if (logic.debug || debug) {
+                    console.debug(debugLabel, input, ' matches ', `/${pattern}/${flags}`, '=', result);
                 }
                 return result !== invert ? true : logic;
             }

@@ -9,9 +9,27 @@ var BooleanLogicTypeEnum;
     BooleanLogicTypeEnum["NONE"] = "none";
     // <editor-fold name="Comparisons">
     /**
-     * Test a value
+     * Test if <code>a</code> matches <code>b</code> exactly
+     * <ul>
+     *   <li>If <code>b</code> is a primitive or an object, test <code>a === b</code></li>
+     *   <li>If <code>b</code> is an array, test individual array items as <code>a[n] === b[n]</code></li>
+     *   </ul>
      */
     BooleanLogicTypeEnum["EQUAL"] = "equal";
+    /**
+     * Test if <code>a</code> matches <code>b</code>
+     * <ul>
+     *   <li>If <code>b</code> is a primitive, compare <code>a === b</code></li>
+     *   <li>If <code>b</code> is an array, if <code>a</code> is also an array, <code>a</code> must contain all values in <code>b</code>, otherwise <code>b</code> must include <code>a</code></li>
+     *   <li>If <code>a</code> is an array, but <code>b</code> is not, <code>a</code> must include <code>b</code></li>
+     *   <li>If <code>b</code> is an object, <code>a</code> must match the same data structure</li>
+     *   </ul>
+     */
+    BooleanLogicTypeEnum["LIKE"] = "like";
+    /**
+     * Test a regular expression: <code>b.exec(a)</code>
+     */
+    BooleanLogicTypeEnum["PATTERN"] = "pattern";
     /**
      * Test a value
      */
