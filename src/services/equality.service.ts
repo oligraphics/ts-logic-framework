@@ -1,5 +1,15 @@
 export const EqualityService = new (class CompareService {
   test(value: unknown, equals: unknown): boolean {
+    if (
+      equals === undefined ||
+      equals === null ||
+      typeof equals === 'number' ||
+      typeof equals === 'string' ||
+      typeof equals === 'boolean'
+    ) {
+      // Perform simple comparison
+      return value === equals;
+    }
     if (Array.isArray(equals)) {
       if (Array.isArray(value)) {
         // All elements in value must be included in input
@@ -8,30 +18,27 @@ export const EqualityService = new (class CompareService {
         // Value must include the input
         return equals.includes(value);
       }
-    } else if (Array.isArray(value)) {
+    }
+    if (Array.isArray(value)) {
       // Input must include the value
       return value.includes(equals);
-    } else if (typeof equals === 'object') {
-      if (typeof value !== 'object') {
-        // Value should have been an object as well
+    }
+    if (typeof value !== 'object') {
+      // Value should have been an object as well
+      return false;
+    }
+    const valueObject: { [key: string]: unknown } = value as {
+      [key: string]: unknown;
+    };
+    // Input must match the object structure in equals
+    for (const [key, valueEquals] of Object.entries(<object>equals)) {
+      if (
+        !valueObject.hasOwnProperty(key) ||
+        !this.test(valueObject[key], valueEquals)
+      ) {
         return false;
       }
-      const valueObject: { [key: string]: unknown } = value as {
-        [key: string]: unknown;
-      };
-      // Input must match the object structure in equals
-      for (const [key, valueEquals] of Object.entries(<object>equals)) {
-        if (
-          !valueObject.hasOwnProperty(key) ||
-          !this.test(valueObject[key], valueEquals)
-        ) {
-          return false;
-        }
-      }
-      return true;
-    } else {
-      // Input must equal value
-      return value === equals;
     }
+    return true;
   }
 })();
