@@ -124,7 +124,7 @@ exports.LogicService = new (class LogicService {
         return this.resolveNested(name, initialKey, pathParts, context, debug);
     }
     resolveNested(fullPath, initialKey, pathParts, context, debug) {
-        if (!context?.hasOwnProperty(initialKey)) {
+        if (context[initialKey] === undefined) {
             if (debug) {
                 console.warn('Context does not contain a value for ', `${initialKey}`, 'Available keys:', ...Object.keys(context));
             }
@@ -143,7 +143,7 @@ exports.LogicService = new (class LogicService {
                 currentValue === undefined) {
                 return currentValue;
             }
-            if (!currentValue.hasOwnProperty(pathParts[i])) {
+            if (currentValue[pathParts[i]] === undefined) {
                 if (debug) {
                     console.warn('No value found for path part', pathParts[i], 'in path', fullPath);
                 }

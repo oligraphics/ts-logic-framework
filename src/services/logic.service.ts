@@ -157,7 +157,7 @@ export const LogicService = new (class LogicService {
     context: DynamicContext,
     debug?: boolean,
   ): T | undefined {
-    if (!context?.hasOwnProperty(initialKey)) {
+    if (context[initialKey] === undefined) {
       if (debug) {
         console.warn(
           'Context does not contain a value for ',
@@ -183,7 +183,7 @@ export const LogicService = new (class LogicService {
       ) {
         return currentValue as T;
       }
-      if (!currentValue.hasOwnProperty(pathParts[i])) {
+      if (currentValue[pathParts[i]] === undefined) {
         if (debug) {
           console.warn(
             'No value found for path part',
