@@ -3,20 +3,23 @@ import { DynamicContext } from '../interfaces/dynamic-context.interface';
 import { LogicService } from './logic.service';
 import { DynamicContextService } from './dynamic-context.service';
 import { ConditionService } from './condition.service';
+import { SelectionTypeEnum } from '../enums/selection-type.enum';
 
 export const SelectionService = new (class SelectionService {
-  resolve<T extends []>(
+  resolve<T>(
     selection: SelectionDto,
     context: DynamicContext,
     debug?: boolean,
   ): T {
     const {
+      type,
       from,
       where,
       orderBy,
       limit,
       offset,
       groupBy,
+      map,
       debug: _debug,
     } = selection.select;
     debug = debug || _debug;
@@ -24,7 +27,7 @@ export const SelectionService = new (class SelectionService {
       console.error("Selection has no 'from' property", selection);
       return [] as T;
     }
-    const items = LogicService.resolve<T>(from, context, debug);
+    const items = LogicService.resolve<[]>(from, context, debug);
     if (items === undefined) {
       if (debug) {
         console.error('Selection returns invalid pool', selection);
@@ -39,8 +42,8 @@ export const SelectionService = new (class SelectionService {
         selection,
       );
     }
-    let validItems: T = where
-      ? (items.filter(
+    let validItems = where
+      ? items.filter(
           (i) =>
             ConditionService.testCondition(
               where,
@@ -52,8 +55,8 @@ export const SelectionService = new (class SelectionService {
               },
               debug,
             ) === true,
-        ) as T)
-      : ([...items] as T);
+        )
+      : [...items];
     if (debug) {
       console.debug('Valid items:', validItems.length);
     }
@@ -71,7 +74,7 @@ export const SelectionService = new (class SelectionService {
       validItems = validItems.slice(
         offsetValue,
         limitValue >= 0 ? offsetValue + limitValue : Number.MAX_VALUE,
-      ) as T;
+      );
     }
     if (groupBy) {
       if (debug) {
@@ -95,6 +98,29 @@ export const SelectionService = new (class SelectionService {
         return [] as T;
       }
     }
-    return validItems as T;
+    let resultItems: unknown[];
+    switch (type ?? SelectionTypeEnum.DEFAULT) {
+      case SelectionTypeEnum.ONE:
+        resultItems = validItems.slice(0, Math.min(validItems.length, 1));
+        break;
+      default:
+        resultItems = validItems;
+        break;
+    }
+    if (map !== undefined) {
+      resultItems = resultItems.map((value) =>
+        LogicService.resolve(map, {
+          ...context,
+          ...DynamicContextService.createContext({
+            value,
+          }),
+        }),
+      );
+    }
+    return (
+      type === SelectionTypeEnum.ONE
+        ? resultItems.find(() => true)
+        : resultItems
+    ) as T;
   }
 })();

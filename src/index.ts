@@ -21,8 +21,9 @@ export * from './dto/expressions/math-expression-step.dto';
 
 export * from './dto/selection/selection.dto';
 
-export * from './enums/operation.enum';
 export * from './enums/boolean-logic-type.enum';
+export * from './enums/operation.enum';
+export * from './enums/selection-type.enum';
 
 export * from './interfaces/computable.interface';
 export * from './interfaces/computable-value.interface';

@@ -4,9 +4,10 @@ exports.SelectionService = void 0;
 const logic_service_1 = require("./logic.service");
 const dynamic_context_service_1 = require("./dynamic-context.service");
 const condition_service_1 = require("./condition.service");
+const selection_type_enum_1 = require("../enums/selection-type.enum");
 exports.SelectionService = new (class SelectionService {
     resolve(selection, context, debug) {
-        const { from, where, orderBy, limit, offset, groupBy, debug: _debug, } = selection.select;
+        const { type, from, where, orderBy, limit, offset, groupBy, map, debug: _debug, } = selection.select;
         debug = debug || _debug;
         if (!from) {
             console.error("Selection has no 'from' property", selection);
@@ -67,7 +68,26 @@ exports.SelectionService = new (class SelectionService {
                 return [];
             }
         }
-        return validItems;
+        let resultItems;
+        switch (type ?? selection_type_enum_1.SelectionTypeEnum.DEFAULT) {
+            case selection_type_enum_1.SelectionTypeEnum.ONE:
+                resultItems = validItems.slice(0, Math.min(validItems.length, 1));
+                break;
+            default:
+                resultItems = validItems;
+                break;
+        }
+        if (map !== undefined) {
+            resultItems = resultItems.map((value) => logic_service_1.LogicService.resolve(map, {
+                ...context,
+                ...dynamic_context_service_1.DynamicContextService.createContext({
+                    value,
+                }),
+            }));
+        }
+        return (type === selection_type_enum_1.SelectionTypeEnum.ONE
+            ? resultItems.find(() => true)
+            : resultItems);
     }
 })();
 //# sourceMappingURL=selection.service.js.map
